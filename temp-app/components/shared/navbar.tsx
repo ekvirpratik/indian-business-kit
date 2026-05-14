@@ -115,7 +115,7 @@ export function Navbar() {
       {/* Auth Buttons */}
       <div className="flex items-center gap-4">
         <Show when="signed-out">
-          <SignInButton mode="modal">
+          <SignInButton mode="modal" fallbackRedirectUrl="/tools">
             <Button
               variant="ghost"
               className="hidden md:flex text-base font-medium hover:bg-transparent hover:text-[#18E299]"

@@ -75,12 +75,12 @@ export default function PricingPage() {
   }, [scratched, fireConfetti]);
 
   const handleBuyNow = (withCoupon = false) => {
+    const checkoutUrl = withCoupon ? `/checkout?coupon=${COUPON_CODE}` : "/checkout";
     if (!isSignedIn) {
-      openSignIn();
+      openSignIn({ fallbackRedirectUrl: checkoutUrl });
       return;
     }
-    const url = withCoupon ? `/checkout?coupon=${COUPON_CODE}` : "/checkout";
-    router.push(url);
+    router.push(checkoutUrl);
   };
 
   return (
