@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.com https://*.clerk.accounts.dev https://*.cashfree.com https://va.vercel-scripts.com blob:; worker-src 'self' blob:; connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://*.cashfree.com https://*.supabase.co; img-src 'self' data: blob: https://images.clerk.com https://img.clerk.com https://*.clerk.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; frame-ancestors 'none';",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.indianbusinesskit.in https://*.cashfree.com https://va.vercel-scripts.com blob:; worker-src 'self' blob:; connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://clerk.indianbusinesskit.in https://*.cashfree.com https://*.supabase.co; img-src 'self' data: blob: https://images.clerk.com https://img.clerk.com https://*.clerk.com https://clerk.indianbusinesskit.in; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; frame-ancestors 'none';",
           }
         ],
       },
