@@ -183,7 +183,7 @@ function FeaturedToolCard({ subStatus }: { subStatus: "loading" | "active" | "ex
                     Checking…
                   </Button>
                 ) : isActive ? (
-                  <Link href="https://app.indianbizkit.com" target="_blank" rel="noopener noreferrer">
+                  <Link href="https://app.indianbusinesskit.in" target="_blank" rel="noopener noreferrer">
                     <Button className="rounded-full bg-[#18E299] text-[#0d0d0d] px-8 h-12 text-[15px] font-bold hover:bg-[#15c586] shadow-[0_2px_10px_rgba(24,226,153,0.3)] transition-all">
                       Launch App
                       <ArrowRight className="ml-2 size-4" />
@@ -364,7 +364,7 @@ export default function ToolsPage() {
             </p>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="inline-block">
               {status === "active" ? (
-                <Link href="https://app.indianbizkit.com" target="_blank" rel="noopener noreferrer">
+                <Link href="https://app.indianbusinesskit.in" target="_blank" rel="noopener noreferrer">
                   <Button className="rounded-full bg-[#0d0d0d] text-white px-8 h-12 text-[15px] font-bold hover:bg-[#0d0d0d]/90 shadow-[0_4px_14px_rgba(0,0,0,0.1)]">
                     Launch App <ArrowRight className="ml-2 size-4" />
                   </Button>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OG Image Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 1200px;
+      height: 630px;
+      background-color: #08080a;
+      font-family: 'Outfit', sans-serif;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Grid & Dot Pattern Background */
+    .bg-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(24, 226, 153, 0.1) 0%, transparent 60%),
+        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 100% 100%, 24px 24px;
+      z-index: 1;
+    }
+    /* Glow borders */
+    .glow-border {
+      position: absolute;
+      inset: 20px;
+      border: 1px solid rgba(24, 226, 153, 0.15);
+      border-radius: 24px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .glow-corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid transparent;
+      z-index: 3;
+    }
+    .glow-top-left {
+      top: 18px;
+      left: 18px;
+      border-top-color: #18E299;
+      border-left-color: #18E299;
+      border-top-left-radius: 24px;
+    }
+    .glow-bottom-right {
+      bottom: 18px;
+      right: 18px;
+      border-bottom-color: #18E299;
+      border-right-color: #18E299;
+      border-bottom-right-radius: 24px;
+    }
+    /* Main Content Container */
+    .container {
+      width: 1100px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+      z-index: 5;
+    }
+    /* Left: Logo Column */
+    .logo-container {
+      flex: 0 0 320px;
+      height: 320px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(24, 226, 153, 0.05);
+    }
+    .logo-container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 32px;
+      padding: 1.5px;
+      background: linear-gradient(to bottom, rgba(24, 226, 153, 0.3), transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .logo-image {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+    }
+    /* Right: Text Column */
+    .info-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+    .badge {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      background: rgba(24, 226, 153, 0.1);
+      border: 1px solid rgba(24, 226, 153, 0.2);
+      color: #18E299;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 8px 16px;
+      border-radius: 100px;
+    }
+    .title {
+      font-size: 64px;
+      font-weight: 900;
+      line-height: 1.1;
+      color: #ffffff;
+      letter-spacing: -1.5px;
+    }
+    .title span {
+      background: linear-gradient(135deg, #ffffff 30%, #18E299 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .description {
+      font-size: 22px;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    /* Footer Pill Tags */
+    .tags {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .tag {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 100px;
+    }
+    .tag-accent {
+      background: rgba(24, 226, 153, 0.05);
+      border-color: rgba(24, 226, 153, 0.15);
+      color: rgba(24, 226, 153, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+  <div class="glow-border"></div>
+  <div class="glow-corner glow-top-left"></div>
+  <div class="glow-corner glow-bottom-right"></div>
+
+  <div class="container">
+    <!-- Left Logo box -->
+    <div class="logo-container">
+      <img src="logo.png" class="logo-image" alt="IBK Logo">
+    </div>
+
+    <!-- Right text info -->
+    <div class="info-container">
+      <div class="badge">India's 1st Integrated POS + ERP + CRM</div>
+      <h1 class="title">Indian<br><span>Business Kit</span></h1>
+      <p class="description">Billing, GST, Inventory, CRM & Payroll – all in one platform. Fully in Hindi & English, optimized for online & offline MSMEs.</p>
+      
+      <div class="tags">
+        <div class="tag tag-accent">✓ Online & Offline</div>
+        <div class="tag">English & Hindi</div>
+        <div class="tag">Trusted by 100K+ MSMEs</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

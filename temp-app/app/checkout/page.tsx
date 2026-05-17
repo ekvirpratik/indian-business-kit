@@ -445,7 +445,7 @@ function CheckoutContent() {
                 {/* Trust badges */}
                 <div className="flex flex-wrap gap-4 mt-7 pt-5 border-t border-white/5">
                   {[
-                    { icon: Mail, label: "support@indianbizkit.com" },
+                    { icon: Mail, label: "support@indianbusinesskit.in" },
                     { icon: ShieldCheck, label: "Secure Checkout" },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="flex items-center gap-1.5 text-white/35 text-xs">

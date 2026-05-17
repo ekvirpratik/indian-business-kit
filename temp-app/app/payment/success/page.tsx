@@ -147,7 +147,7 @@ function SuccessContent() {
               Go Home
             </Link>
             <Link
-              href="https://app.indianbizkit.com"
+              href="https://app.indianbusinesskit.in"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#18E299] text-[#0d0d0d] font-black hover:bg-[#15c586] hover:scale-[1.02] transition-all shadow-[0_0_30px_rgba(24,226,153,0.25)]"
             >
               Go to Dashboard
