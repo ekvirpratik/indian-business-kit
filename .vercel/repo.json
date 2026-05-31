@@ -1,0 +1,17 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_l2r2017tHyGvq2gO2t6X94V50bEh",
+      "name": "temp-app",
+      "directory": ".",
+      "orgId": "team_viSe88dN4N3Sxa8Rv6Z1DvtH"
+    },
+    {
+      "id": "prj_iypx3BVWGTFHGFOb08jEXKgx8ZNq",
+      "name": "inventory-management",
+      "directory": "white-label-business-manger0",
+      "orgId": "team_viSe88dN4N3Sxa8Rv6Z1DvtH"
+    }
+  ]
+}

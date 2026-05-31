@@ -28,25 +28,21 @@ function App() {
             toast.error('Error fetching subscription: ' + error.message);
           }
           const subData = Array.isArray(data) ? data[0] : data;
-          if (subData && subData.active) {
-            setIsSubscribed(true);
-          } else {
-            setIsSubscribed(false);
-          }
+          setIsSubscribed(!!(subData && subData.active));
         })
         .catch(err => {
           console.error(err);
           toast.error('Failed to verify subscription: ' + err.message);
           setIsSubscribed(false);
         });
-    } else if (isLoaded && !isSignedIn) {
-      setIsSubscribed(null);
     }
   }, [user, isLoaded, isSignedIn]);
 
+  // Derive effective subscription: treat as null when signed out
+  const subscription = isSignedIn ? isSubscribed : null;
   const isSetupComplete = store.businessInfo.setupComplete;
 
-  if (isSignedIn && isSubscribed === null) {1
+  if (isSignedIn && subscription === null) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white font-sans antialiased">
         <div className="flex flex-col items-center gap-4">
@@ -57,7 +53,7 @@ function App() {
     );
   }
 
-  if (isSignedIn && isSubscribed === false) {
+  if (isSignedIn && subscription === false) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#050d08] text-white font-sans antialiased p-6">
         {/* Glow Background */}
