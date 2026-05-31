@@ -1,7 +1,6 @@
 "use client"
 
-import React, { useEffect, useId, useRef, useState } from "react"
-import { motion } from "motion/react"
+import React, { useId } from "react"
 
 import { cn } from "@/lib/utils"
 
@@ -70,6 +69,7 @@ export function DotPattern({
   cy = 1,
   cr = 1,
   className,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   glow = false,
   ...props
 }: DotPatternProps) {

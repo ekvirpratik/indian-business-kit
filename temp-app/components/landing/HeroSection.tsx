@@ -10,7 +10,7 @@ export function HeroSection() {
         
         <span className="relative flex size-2.5 rounded-full bg-[#18E299] mr-2 shadow-[0_0_12px_rgba(24,226,153,0.9)]"></span>
         <span className="relative text-xs font-bold uppercase tracking-[0.8px] text-[#0d0d0d] drop-shadow-sm">
-          Billing + CRM + AI Marketing + Digital Guidance
+          Billing + CRM + AI Marketing + Digital Guidance+ Mini HR Employee Tracking
         </span>
       </div>
 

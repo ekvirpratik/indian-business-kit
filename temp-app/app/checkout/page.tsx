@@ -47,6 +47,25 @@ function validateEmail(e: string) {
 import { useUser, SignIn } from "@clerk/nextjs";
 import { useEffect } from "react";
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") {
+      resolve(false);
+      return;
+    }
+    if (typeof window !== "undefined" && "Razorpay" in window) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 // ─── Main checkout form ────────────────────────────────────────────────────────
 function CheckoutContent() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -70,13 +89,13 @@ function CheckoutContent() {
 
   const total = applied ? FINAL_PRICE : BASE_PRICE;
 
-  // Prefill user details from Clerk
-  useEffect(() => {
-    if (isLoaded && isSignedIn && user) {
-      if (!name) setName(user.fullName || user.firstName || "");
-      if (!email) setEmail(user.primaryEmailAddress?.emailAddress || "");
-    }
-  }, [isLoaded, isSignedIn, user, name, email]);
+  // Prefill user details from Clerk when loaded
+  const [prevUserId, setPrevUserId] = useState<string | null>(null);
+  if (isLoaded && isSignedIn && user && user.id !== prevUserId) {
+    setPrevUserId(user.id);
+    if (!name) setName(user.fullName || user.firstName || "");
+    if (!email) setEmail(user.primaryEmailAddress?.emailAddress || "");
+  }
 
   // Restore scrolling when user is authenticated
   useEffect(() => {
@@ -186,18 +205,89 @@ function CheckoutContent() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to create order");
 
-      // Initialize Cashfree and open checkout
-      const { load } = await import("@cashfreepayments/cashfree-js");
-      const cashfree = await load({
-        mode:
-          (process.env.NEXT_PUBLIC_CASHFREE_ENV as "sandbox" | "production") ||
-          "sandbox",
-      });
+      // Load Razorpay Script dynamically
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Failed to load Razorpay SDK. Please check your internet connection.");
+      }
 
-      cashfree.checkout({
-        paymentSessionId: data.paymentSessionId,
-        redirectTarget: "_self", // full redirect so callback can save to DB
+      // Configure Razorpay Options
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: data.amount,
+        currency: data.currency || "INR",
+        name: "Indian Business Kit",
+        description: "Annual Subscription Plan",
+        image: "/logo.png",
+        order_id: data.orderId,
+        handler: async function (response: {
+          razorpay_order_id: string;
+          razorpay_payment_id: string;
+          razorpay_signature: string;
+        }) {
+          try {
+            setLoading(true);
+            setGeneralError("");
+
+            // Verify signature and persist subscription on backend
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                customerName: name.trim(),
+                customerEmail: email.trim() || undefined,
+                customerPhone: phone.trim(),
+                amount: total,
+                userId: user?.id || null,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (!verifyRes.ok) {
+              throw new Error(verifyData.error || "Payment verification failed");
+            }
+
+            // Redirect to trigger confetti and success popup
+            window.location.href = `/?payment=success&order_id=${response.razorpay_order_id}`;
+          } catch (verifyErr: unknown) {
+            console.error("Payment verification error:", verifyErr);
+            const err = verifyErr as Error;
+            setGeneralError(err.message || "Failed to verify payment. Please contact support.");
+            setLoading(false);
+          }
+        },
+        prefill: {
+          name: name.trim(),
+          email: email.trim() || undefined,
+          contact: phone.trim(),
+        },
+        theme: {
+          color: "#18E299",
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+            setGeneralError("Payment cancelled by user.");
+          },
+        },
+      };
+
+      const RazorpayConstructor = (window as unknown as {
+        Razorpay: new (options: unknown) => {
+          on: (event: string, callback: (err: { error: { description: string } }) => void) => void;
+          open: () => void;
+        };
+      }).Razorpay;
+      const rzp = new RazorpayConstructor(options);
+      rzp.on("payment.failed", function (response: { error: { description: string } }) {
+        console.error("Razorpay payment failed:", response.error);
+        setGeneralError(response.error.description || "Payment failed. Please try again.");
+        setLoading(false);
       });
+      rzp.open();
     } catch (err: unknown) {
       const msg =
         err instanceof Error
@@ -445,7 +535,7 @@ function CheckoutContent() {
                 {/* Trust badges */}
                 <div className="flex flex-wrap gap-4 mt-7 pt-5 border-t border-white/5">
                   {[
-                    { icon: Mail, label: "support@indianbizkit.com" },
+                    { icon: Mail, label: "support@indianbusinesskit.in" },
                     { icon: ShieldCheck, label: "Secure Checkout" },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="flex items-center gap-1.5 text-white/35 text-xs">
@@ -523,7 +613,7 @@ function CheckoutContent() {
                 </button>
 
                 <p className="text-white/20 text-xs text-center mt-4 leading-relaxed">
-                  Powered by Cashfree Payments.
+                  Powered by Razorpay.
                   <br />
                   Your data is encrypted &amp; secure.
                 </p>
@@ -541,7 +631,7 @@ function CheckoutContent() {
         >
           {[
             "256-bit SSL Encryption",
-            "Cashfree Certified",
+            "Razorpay Secure",
             "PCI-DSS Compliant",
             "Instant Access After Payment",
           ].map((t) => (

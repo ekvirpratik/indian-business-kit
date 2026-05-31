@@ -17,20 +17,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Indian Business Kit",
+  metadataBase: new URL("https://www.indianbusinesskit.in"),
+  title: "Indian Business Kit - India's 1st POS + ERP + CRM",
   description: "India’s first POS + ERP + CRM – fully in Hindi & English. Billing, GST, inventory, CRM, payroll – all on one app, with or without internet. Trusted by 100,000+ MSMEs since 2005.",
-  keywords: ["POS", "ERP", "CRM", "Billing", "GST", "Inventory", "CRM", "Payroll", "MSME", "Hindi", "English"],
+  keywords: ["POS", "ERP", "CRM", "Billing", "GST", "Inventory", "CRM", "Payroll", "MSME", "Hindi", "English", "Indian Business Kit"],
   openGraph: {
-    title: "Indian Business Kit",
+    title: "Indian Business Kit - India's 1st POS + ERP + CRM",
     description: "India’s first POS + ERP + CRM – fully in Hindi & English. Billing, GST, inventory, CRM, payroll – all on one app, with or without internet. Trusted by 100,000+ MSMEs since 2005.",
+    url: "https://www.indianbusinesskit.in",
+    siteName: "Indian Business Kit",
+    locale: "en_US",
+    type: "website",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://www.indianbusinesskit.in/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Indian Business Kit",
+        alt: "Indian Business Kit - POS + ERP + CRM",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Indian Business Kit - India's 1st POS + ERP + CRM",
+    description: "India’s first POS + ERP + CRM – fully in Hindi & English. Billing, GST, inventory, CRM, payroll – all on one app, with or without internet. Trusted by 100,000+ MSMEs since 2005.",
+    images: ["https://www.indianbusinesskit.in/og-image.png"],
   },
 };
 

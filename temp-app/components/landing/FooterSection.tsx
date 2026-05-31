@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export function FooterSection() {
   return (
@@ -15,39 +16,43 @@ export function FooterSection() {
             <p className="text-white/60 text-sm leading-relaxed max-w-xs">
               The all-in-one platform built specifically for Indian small businesses to manage billing, leads, and marketing.
             </p>
+            <p className="text-white/40 text-xs mt-4 leading-relaxed">
+              Indian Business Kit is a product owned and operated by <strong>Western India Payment Services Private Limited</strong>.
+            </p>
           </div>
           
           <div>
             <h4 className="text-white font-semibold mb-6">Product</h4>
             <ul className="space-y-4">
               <li><a href="#features" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Features</a></li>
-              <li><a href="#pricing" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Pricing</a></li>
+              <li><Link href="/pricing" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Pricing</Link></li>
               <li><a href="#" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Referral Program</a></li>
             </ul>
           </div>
           
           <div>
-            <h4 className="text-white font-semibold mb-6">Resources</h4>
+            <h4 className="text-white font-semibold mb-6">Support</h4>
             <ul className="space-y-4">
+              <li><Link href="/contact" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Contact Us</Link></li>
               <li><a href="#" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Help Center</a></li>
               <li><a href="#" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Documentation</a></li>
-              <li><a href="#" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Community</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-white font-semibold mb-6">Legal</h4>
             <ul className="space-y-4">
-              <li><a href="#" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Refund Policy</a></li>
+              <li><Link href="/privacy-policy" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="/refund-policy" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Refund & Cancellation</Link></li>
+              <li><Link href="/shipping-policy" className="text-white/60 hover:text-[#18E299] text-sm transition-colors">Shipping & Delivery</Link></li>
             </ul>
           </div>
         </div>
         
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-sm">
-            © {new Date().getFullYear()} Indian Business Kit Technologies. All rights reserved.
+            © {new Date().getFullYear()} Western India Payment Services Private Limited. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <a href="#" className="text-white/40 hover:text-white transition-colors text-sm">Twitter</a>
