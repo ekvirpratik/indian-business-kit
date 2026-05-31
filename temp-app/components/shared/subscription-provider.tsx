@@ -174,7 +174,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     };
 
     checkSubscription();
-  }, [isLoaded, isSignedIn]);
+  }, [isLoaded, isSignedIn, user]);
 
   return (
     <SubscriptionContext.Provider value={{ status, expiryDate, refreshSubscription }}>

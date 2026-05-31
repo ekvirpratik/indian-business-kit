@@ -1,14 +1,19 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 // Initialize a singleton client instance to reuse TCP connections across requests
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let supabaseAdminInstance: SupabaseClient | null = null;
 
 // Use service role key for server-side admin operations (bypass RLS)
 function getAdminClient() {
-  return supabaseAdmin;
+  if (!supabaseAdminInstance) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !key) {
+      throw new Error("Supabase environment variables are missing!");
+    }
+    supabaseAdminInstance = createClient(url, key);
+  }
+  return supabaseAdminInstance;
 }
 
 export interface Subscription {
