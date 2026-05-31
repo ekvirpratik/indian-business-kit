@@ -35,6 +35,14 @@ function SuccessHandlerContent() {
   const paymentStatus = searchParams.get("payment");
   const orderId = searchParams.get("order_id");
 
+  const [prevPaymentStatus, setPrevPaymentStatus] = useState<string | null>(null);
+  if (paymentStatus !== prevPaymentStatus) {
+    setPrevPaymentStatus(paymentStatus);
+    if (paymentStatus === "success") {
+      setShowPopup(true);
+    }
+  }
+
   useEffect(() => {
     if (paymentStatus !== "success") return;
 
@@ -46,9 +54,6 @@ function SuccessHandlerContent() {
 
     // Refresh context state so user doesn't have to reload
     refreshSubscription();
-
-    // Show popup
-    setShowPopup(true);
 
     // Fire confetti after a short delay
     const timer = setTimeout(() => {

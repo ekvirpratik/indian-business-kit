@@ -36,13 +36,12 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     }
 
     if (!isSignedIn) {
-      if (localActive) {
-        setStatus("active");
-        setExpiryDate("Active (Please Login to manage)");
-      } else {
-        setStatus("none");
-        setExpiryDate(null);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("planActive");
+        localStorage.removeItem("paymentTime");
       }
+      setStatus("none");
+      setExpiryDate(null);
       return;
     }
 
@@ -113,13 +112,12 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       }
 
       if (!isSignedIn) {
-        if (localActive) {
-          setStatus("active");
-          setExpiryDate("Active (Please Login to manage)");
-        } else {
-          setStatus("none");
-          setExpiryDate(null);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("planActive");
+          localStorage.removeItem("paymentTime");
         }
+        setStatus("none");
+        setExpiryDate(null);
         return;
       }
 
