@@ -46,7 +46,7 @@ function App() {
 
   const isSetupComplete = store.businessInfo.setupComplete;
 
-  if (isSignedIn && isSubscribed === null) {
+  if (isSignedIn && isSubscribed === null) {1
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white font-sans antialiased">
         <div className="flex flex-col items-center gap-4">
@@ -59,32 +59,39 @@ function App() {
 
   if (isSignedIn && isSubscribed === false) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white font-sans antialiased p-6">
-        <div className="max-w-md w-full bg-slate-900/60 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl flex flex-col items-center text-center gap-6 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-pink-500 via-purple-500 to-indigo-500"></div>
-          <div className="w-16 h-16 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-400 text-3xl font-extrabold shadow-inner shadow-pink-500/20">
+      <div className="min-h-screen flex items-center justify-center bg-[#050d08] text-white font-sans antialiased p-6">
+        {/* Glow Background */}
+        <div className="pointer-events-none fixed inset-0 z-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-[#18E299]/5 blur-[100px]" />
+        </div>
+
+        <div className="relative z-10 max-w-md w-full bg-slate-950/40 backdrop-blur-xl border border-emerald-500/10 p-8 rounded-3xl flex flex-col items-center text-center gap-6 shadow-[0_20px_50px_rgba(24,226,153,0.03)] overflow-hidden">
+          {/* Top subtle green accent line */}
+          <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#18E299] to-transparent"></div>
+          
+          <div className="w-16 h-16 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 flex items-center justify-center text-[#18E299] text-3xl font-extrabold shadow-inner shadow-emerald-500/5">
             🔒
           </div>
           <div>
-            <h2 className="text-2xl font-bold bg-linear-to-r from-white to-slate-400 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-black text-white tracking-tight">
               Access Restricted
             </h2>
             <p className="text-slate-400 mt-2 text-sm leading-relaxed">
-              It looks like your account does not have an active subscription to our Business Kit yet.
+              Your account does not have an active subscription to Indian Business Kit.
             </p>
           </div>
           <div className="w-full flex flex-col gap-3">
             <a 
-              href="https://wa.me/919054256493"
+              href="https://wa.me/917020431433?text=Hi%2C%20I%20need%20assistance%20activating%20my%20Indian%20Business%20Kit%20subscription%20for%20this%20account."
               target="_blank"
               rel="noreferrer"
-              className="w-full bg-linear-to-r from-pink-500 to-indigo-500 hover:from-pink-600 hover:to-indigo-600 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2"
+              className="w-full bg-[#18E299] hover:bg-[#15c586] text-[#050d08] font-black py-3.5 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
             >
               Contact Support
             </a>
             <button 
               onClick={() => signOut()}
-              className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-3 px-6 rounded-2xl border border-slate-700 transition-colors"
+              className="w-full bg-slate-950 hover:bg-slate-900 text-slate-400 hover:text-slate-300 font-bold py-3.5 px-6 rounded-2xl border border-slate-900 hover:border-slate-800 transition-all duration-200"
             >
               Log Out
             </button>
