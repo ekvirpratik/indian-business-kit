@@ -218,7 +218,7 @@ function CheckoutContent() {
         currency: data.currency || "INR",
         name: "Indian Business Kit",
         description: "Annual Subscription Plan",
-        image: "/logo.png",
+        image: typeof window !== "undefined" ? `${window.location.origin}/logo.png` : undefined,
         order_id: data.orderId,
         handler: async function (response: {
           razorpay_order_id: string;
