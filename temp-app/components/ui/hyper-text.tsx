@@ -70,10 +70,11 @@ export function HyperText({
 
   useEffect(() => {
     if (!startOnView) {
-      startAnimation()
+      const timer = setTimeout(startAnimation, delay)
+      return () => clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [startOnView, delay])
 
   return (
     <Component

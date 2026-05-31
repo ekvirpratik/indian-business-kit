@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const CASHFREE_BASE_URL =
-  process.env.CASHFREE_ENV === "sandbox"
-    ? "https://sandbox.cashfree.com/pg"
-    : "https://api.cashfree.com/pg";
-
-const CASHFREE_API_VERSION = "2023-08-01";
+import Razorpay from "razorpay";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,63 +14,67 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate unique order ID using timestamp + random string
-    const orderId = `IBK_${Date.now()}_${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
-
-    const orderPayload = {
-      order_id: orderId,
-      order_amount: amount,
-      order_currency: "INR",
-      customer_details: {
-        customer_id: `cust_${customerPhone}`,
-        customer_name: customerName || "Customer",
-        customer_email: customerEmail || "customer@example.com",
-        customer_phone: customerPhone,
-      },
-      order_meta: {
-        return_url: `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/payment-callback?order_id={order_id}`,
-        notify_url: process.env.CASHFREE_WEBHOOK_URL || "", // Empty for now - add after deployment
-        payment_methods: "cc,dc,nb,upi,app",
-      },
-      order_tags: {
-        coupon_applied: coupon || "none",
-        source: "landing_page",
-        clerk_user_id: userId || "none",
-      },
-    };
-
-    const response = await fetch(`${CASHFREE_BASE_URL}/orders`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-client-id": process.env.CASHFREE_APP_ID!,
-        "x-client-secret": process.env.CASHFREE_APP_SECRET!,
-        "x-api-version": CASHFREE_API_VERSION,
-      },
-      body: JSON.stringify(orderPayload),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error("Cashfree order creation failed:", data);
+    // Razorpay minimum amount is 1 INR (100 paise)
+    if (amount < 1) {
       return NextResponse.json(
-        { error: data.message || "Failed to create order" },
-        { status: response.status }
+        { error: "Amount must be at least 1 INR" },
+        { status: 400 }
       );
     }
 
-    // Return only what the frontend needs
-    return NextResponse.json({
-      orderId: data.order_id,
-      paymentSessionId: data.payment_session_id,
-      orderStatus: data.order_status,
-      amount: data.order_amount,
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      console.error("Razorpay keys are missing in environment variables");
+      return NextResponse.json(
+        { error: "Payment gateway credentials are not configured" },
+        { status: 500 }
+      );
+    }
+
+    // Initialize Razorpay client
+    const razorpay = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
     });
-  } catch (error) {
+
+    // Generate unique internal receipt ID
+    const receiptId = `IBK_${Date.now()}_${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+
+    // Create order on Razorpay
+    const order = await razorpay.orders.create({
+      amount: Math.round(amount * 100), // convert INR Rupees to paise, ensure integer
+      currency: "INR",
+      receipt: receiptId,
+      notes: {
+        customerName: customerName || "Customer",
+        customerEmail: customerEmail || "customer@example.com",
+        customerPhone: customerPhone,
+        coupon: coupon || "none",
+        userId: userId || "none",
+      },
+    });
+
+    return NextResponse.json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+    });
+  } catch (error: unknown) {
     console.error("create-order API error:", error);
+    const err = error as { statusCode?: number; message?: string };
+    
+    // Check for Razorpay authentication error
+    if (err.statusCode === 401 || (err.message && err.message.includes("401"))) {
+      return NextResponse.json(
+        { error: "Invalid API credentials" },
+        { status: 401 }
+      );
+    }
+
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: err.message || "Failed to create order" },
       { status: 500 }
     );
   }

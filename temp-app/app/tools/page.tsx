@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { Navbar } from "@/components/shared/navbar"
 import { useSubscription } from "@/components/shared/subscription-provider"
@@ -262,11 +262,13 @@ export default function ToolsPage() {
   const [showExpiryPopup, setShowExpiryPopup] = useState(false)
 
   // Show expiry popup once when status is determined to be expired
-  useEffect(() => {
+  const [prevStatus, setPrevStatus] = useState<string | null>(null)
+  if (status !== prevStatus) {
+    setPrevStatus(status)
     if (status === "expired") {
       setShowExpiryPopup(true)
     }
-  }, [status])
+  }
 
   return (
     <div className="relative min-h-screen bg-white text-[#0d0d0d] font-sans overflow-x-hidden">

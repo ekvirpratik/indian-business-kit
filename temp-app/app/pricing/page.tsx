@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/shared/navbar";
@@ -178,7 +178,7 @@ export default function PricingPage() {
 
                   <p className="text-white/40 text-sm mt-4">
                     <ShieldCheck className="inline size-3.5 mr-1" />
-                    Secure checkout · Powered by Cashfree
+                    Secure checkout · Powered by Razorpay
                   </p>
                 </div>
                 <div className="flex-1 p-10 lg:p-14 bg-white/5 relative z-10">
