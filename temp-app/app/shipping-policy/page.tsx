@@ -28,9 +28,9 @@ export default function ShippingPolicyPage() {
           <strong>Instant Activation:</strong> Upon successful checkout and verification of payment by our secure aggregator, the provisioning of your SaaS portal occurs **instantly**. 
         </li>
         <li>
-          <strong>Access Method:</strong> You will receive immediate confirmation and complete login access credentials directly via the **Registered Email Address** linked to your Clerk/OAuth profile. Alternatively, you will be redirected automatically to the production dashboard at <a href="https://app.indianbusinesskit.in" className="text-[#18E299] font-medium">https://app.indianbusinesskit.in</a>.
+          <strong>Access Method:</strong> You will receive immediate confirmation and complete login access credentials directly via the **Registered Email Address** linked to your Clerk/OAuth profile. Alternatively, you will be redirected automatically to the production dashboard at <a href="https://inventory-management.indianbusinesskit.in" className="text-[#18E299] font-medium">https://inventory-management.indianbusinesskit.in</a>.
         </li>
-      </ul>
+      </ul> 
 
       <h2 className="text-2xl font-bold mt-8 mb-4">2. Expected Timeframes</h2>
       <div className="relative overflow-x-auto border border-gray-100 rounded-2xl">
