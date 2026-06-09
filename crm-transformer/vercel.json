@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/__clerk/(.*)",
+      "destination": "https://clerk.indianbusinesskit.in/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
