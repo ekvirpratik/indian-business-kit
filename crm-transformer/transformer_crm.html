@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="tab-title">Business CRM - Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --border: #e2e8f0;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 80px;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f1f5f9;
+            color: var(--slate-800);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark);
+            color: white;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 100;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar.collapsed .logo span,
+        .sidebar.collapsed .nav-link span {
+            display: none;
+        }
+
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .toggle-sidebar {
+            position: absolute;
+            right: -12px;
+            top: 32px;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+            border: 2px solid white;
+            z-index: 101;
+            box-shadow: var(--shadow);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 8px;
+            white-space: nowrap;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .logo-placeholder {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-link {
+            color: #94a3b8;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 8px 20px -6px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 32px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark);
+            letter-spacing: -0.02em;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            border-color: var(--border);
+            color: var(--slate-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light);
+            border-color: var(--gray);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-card h3 {
+            color: var(--gray);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.025em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .metric-card .number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .metric-card .trend {
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend.up {
+            color: var(--success);
+        }
+
+        .trend.neutral {
+            color: var(--gray);
+        }
+
+        /* Leads Section */
+        .leads-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: var(--light);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .filter-sort {
+            display: flex;
+            gap: 12px;
+        }
+
+        .filter-sort select {
+            padding: 9px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            color: var(--slate-700);
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--light);
+            padding: 12px 24px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray);
+            border-bottom: 1px solid var(--border);
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--slate-700);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #fbfcfe;
+        }
+
+        .lead-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 10px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status.hot {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status.warm {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .status.cold {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .status.converted {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .source-badge {
+            display: inline-flex;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .source-badge.gbp {
+            background: #e0f2fe;
+            color: #075985;
+            border-color: #bae6fd;
+        }
+
+        .source-badge.website {
+            background: #f5f3ff;
+            color: #5b21b6;
+            border-color: #ddd6fe;
+        }
+
+        .source-badge.whatsapp {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--slate-700);
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--light);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            max-width: 560px;
+            width: 100%;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--dark);
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 24px;
+            top: 24px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+            line-height: 1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--slate-700);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--dark);
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .pipeline-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+        }
+
+        .pipeline-column {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 500px;
+            width: 220px;
+            flex-shrink: 0;
+        }
+
+        .pipeline-title {
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray);
+            letter-spacing: 0.05em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .pipeline-card {
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            cursor: grab;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .pipeline-card:hover {
+            border-color: var(--primary);
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pipeline-card strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .pipeline-card small {
+            color: var(--gray);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 24px 8px;
+            }
+
+            .logo span,
+            .nav-menu span {
+                display: none;
+            }
+
+            .logo-icon {
+                margin: 0 auto;
+            }
+
+            .nav-menu a {
+                justify-content: center;
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                padding: 12px;
+            }
+
+            .logo {
+                margin-bottom: 0;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .sidebar,
+            .header,
+            .btn,
+            .search-box,
+            .filter-sort {
+                display: none !important;
+            }
+
+            .container,
+            .main-content,
+            .content,
+            .leads-section {
+                display: block !important;
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                overflow: visible !important;
+            }
+
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+
+            th,
+            td {
+                padding: 10px !important;
+                border: 1px solid #ddd !important;
+                font-size: 12px !important;
+                color: black !important;
+            }
+
+            th {
+                background: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* Hide Action column in tables during print */
+            th:last-child,
+            td:last-child {
+                display: none !important;
+            }
+
+            #clients-section .table-header button {
+                display: none !important;
+            }
+
+            .section-content {
+                display: none;
+            }
+
+            .section-content[style*="display: block"] {
+                display: block !important;
+            }
+
+            .table-header {
+                padding: 10px 0;
+                border: none;
+            }
+
+            .table-header h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="toggle-sidebar" id="toggle-sidebar">
+                <span>◀</span>
+            </div>
+            <div class="logo" id="sidebar-logo-container">
+                <div class="logo-placeholder" id="logo-icon">⚡</div>
+                <span id="company-name-display">Business CRM</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active" data-section="dashboard">📊 <span>Dashboard</span></a></li>
+                <li><a href="#" class="nav-link" data-section="leads">📋 <span>All Leads</span></a></li>
+                <li><a href="#" class="nav-link" data-section="clients">💎 <span>Clients</span></a></li>
+                <li><a href="#" class="nav-link" data-section="pipeline">🎯 <span>Pipeline</span></a></li>
+                <li><a href="#" class="nav-link" data-section="tasks">✅ <span>Task Manager</span></a></li>
+                <li><a href="#" class="nav-link" data-section="whatsapp">💬 <span>WhatsApp Queue</span></a></li>
+                <li><a href="#" class="nav-link" data-section="reports">📈 <span>Reports</span></a></li>
+                <li><a href="#" class="nav-link" data-section="team">👥 <span>Team Management</span></a></li>
+                <li><a href="#" class="nav-link" data-section="settings">⚙️ <span>Settings</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="openAddLeadModal()">+ Add Lead Manually</button>
+                    <button class="btn btn-secondary" onclick="exportLeads()">📥 Export CSV</button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="section-content">
+                    <div class="dashboard-grid">
+                        <div class="metric-card">
+                            <h3>Total Leads</h3>
+                            <div class="number" id="total-leads">0</div>
+                            <div class="trend up"><span>↑</span> 12% This Month</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Hot Leads</h3>
+                            <div class="number" id="hot-leads">0</div>
+                            <div class="trend up"><span>🔥</span> Active Prospects</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Conversion Rate</h3>
+                            <div class="number" id="conversion-rate">0%</div>
+                            <div class="trend neutral"><span>📊</span> Last 30 Days</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Pipeline Value</h3>
+                            <div class="number" id="pipeline-value">₹0</div>
+                            <div class="trend up"><span>💰</span> Potential Revenue</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Total Revenue</h3>
+                            <div class="number" id="total-revenue">₹0</div>
+                            <div class="trend up"><span>📈</span> Won Deals</div>
+                        </div>
+                    </div>
+
+                    <div class="leads-section">
+                        <div class="table-header">
+                            <div class="search-box">
+                                <input type="text" id="search-input" placeholder="Search leads by name or company...">
+                            </div>
+                            <div class="filter-sort">
+                                <select id="status-filter" onchange="filterLeads()">
+                                    <option value="">All Status</option>
+                                    <option value="hot">🔥 Hot</option>
+                                    <option value="warm">🟠 Warm</option>
+                                    <option value="cold">❄️ Cold</option>
+                                    <option value="converted">✅ Converted</option>
+                                </select>
+                                <select id="source-filter" onchange="filterLeads()">
+                                    <option value="">All Sources</option>
+                                    <option value="gbp">Google Business Profile</option>
+                                    <option value="website">Website Form</option>
+                                    <option value="whatsapp">WhatsApp</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <table id="leads-table">
+                            <thead>
+                                <tr>
+                                    <th>Lead Name</th>
+                                    <th>Company</th>
+                                    <th>Phone</th>
+                                    <th>Requirement</th>
+                                    <th>Source</th>
+                                    <th>Status</th>
+                                    <th>Added Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leads-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Leads Section -->
+                <div id="leads-section" class="section-content" style="display: none;">
+                    <div class="leads-section">
+                        <div class="table-header">
+                            <div class="search-box">
+                                <input type="text" id="all-leads-search" placeholder="Search leads..."
+                                    oninput="filterAllLeads()">
+                            </div>
+                            <div class="filter-sort">
+                                <select id="all-leads-status" onchange="filterAllLeads()">
+                                    <option value="">All Status</option>
+                                    <option value="hot">🔥 Hot</option>
+                                    <option value="warm">🟠 Warm</option>
+                                    <option value="cold">❄️ Cold</option>
+                                    <option value="converted">✅ Converted</option>
+                                </select>
+                            </div>
+                        </div>
+                        <table id="all-leads-table">
+                            <thead>
+                                <tr>
+                                    <th>Lead Name</th>
+                                    <th>Company</th>
+                                    <th>Phone</th>
+                                    <th>Email</th>
+                                    <th>Requirement</th>
+                                    <th>Budget</th>
+                                    <th>Status</th>
+                                    <th>Next Follow-up</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="all-leads-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Clients Section -->
+                <div id="clients-section" class="section-content" style="display: none;">
+                    <div class="leads-section">
+                        <div class="table-header">
+                            <h3>Business Clients</h3>
+                            <button class="btn btn-primary" onclick="window.print()">🖨️ Export PDF</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>Company</th>
+                                    <th>Project Value</th>
+                                    <th>Won Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clients-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pipeline Section -->
+                <div id="pipeline-section" class="section-content" style="display: none;">
+                    <h2 style="margin-bottom: 20px;">Sales Pipeline</h2>
+                    <div class="pipeline-section" id="pipeline-container">
+                        <!-- Pipeline columns will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Tasks Section -->
+                <div id="tasks-section" class="section-content" style="display: none;">
+                    <div class="leads-section">
+                        <div class="table-header">
+                            <h3>Task & Follow-up Manager</h3>
+                            <button class="btn btn-primary" onclick="openAddTaskModal()">+ Add New Task</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Task Description</th>
+                                    <th>Assigned To</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasks-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Queue Section -->
+                <div id="whatsapp-section" class="section-content" style="display: none;">
+                    <div class="leads-section">
+                        <div class="table-header">
+                            <h3>Pending WhatsApp Follow-ups</h3>
+                            <button class="btn btn-primary" onclick="sendBulkWhatsApp()">📤 Send Selected</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="select-all"></th>
+                                    <th>Lead Name</th>
+                                    <th>Phone</th>
+                                    <th>Company</th>
+                                    <th>Last Message</th>
+                                    <th>Days Since Contact</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="whatsapp-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Team Section -->
+                <div id="team-section" class="section-content" style="display: none;">
+                    <div class="leads-section">
+                        <div class="table-header">
+                            <h3>Team Members</h3>
+                            <button class="btn btn-primary" onclick="openAddTeamMemberModal()">+ Add Member</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Member Name</th>
+                                    <th>Role</th>
+                                    <th>Email</th>
+                                    <th>Assigned Leads</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="team-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Reports Section -->
+                <div id="reports-section" class="section-content" style="display: none;">
+                    <div style="background: white; padding: 30px; border-radius: 8px;">
+                        <h2 style="margin-bottom: 20px;">Lead Generation Reports</h2>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                            <div>
+                                <h3 style="margin-bottom: 15px;">Leads by Source</h3>
+                                <table>
+                                    <tr>
+                                        <td>Google Business Profile</td>
+                                        <td style="text-align: right;"><strong id="gbp-count">0</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Website Form</td>
+                                        <td style="text-align: right;"><strong id="website-count">0</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>WhatsApp</td>
+                                        <td style="text-align: right;"><strong id="whatsapp-count">0</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+                                <h3 style="margin-bottom: 15px;">Leads by Status</h3>
+                                <table>
+                                    <tr>
+                                        <td>🔥 Hot</td>
+                                        <td style="text-align: right;"><strong id="hot-count">0</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>🟠 Warm</td>
+                                        <td style="text-align: right;"><strong id="warm-count">0</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>❄️ Cold</td>
+                                        <td style="text-align: right;"><strong id="cold-count">0</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>✅ Converted</td>
+                                        <td style="text-align: right;"><strong id="converted-count">0</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settings-section" class="section-content" style="display: none;">
+                    <div style="background: white; padding: 30px; border-radius: 8px; max-width: 600px;">
+                        <h2 style="margin-bottom: 20px;">Settings</h2>
+
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="settings-company-name" placeholder="Enter Company Name">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Business Logo</label>
+                            <input type="file" id="logo-upload" accept="image/*" onchange="previewLogo(event)">
+                            <div id="logo-preview-container" style="margin-top: 10px; display: none;">
+                                <img id="logo-preview"
+                                    style="max-width: 100px; max-height: 50px; border: 1px solid var(--border); padding: 5px; border-radius: 4px;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Industry Type</label>
+                            <select id="industry-type">
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Service Provider">Service Provider</option>
+                                <option value="Agency">Agency</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Education">Education</option>
+                                <option value="Real Estate">Real Estate</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Custom">Custom</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>WhatsApp Business Number</label>
+                            <input type="tel" id="whatsapp-number"
+                                placeholder="Enter your WhatsApp number (with country code)">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company Email for Notifications</label>
+                            <input type="email" id="company-email" placeholder="your.email@company.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Default Lead Requirement (Auto-suggestion)</label>
+                            <textarea id="default-requirement" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>WhatsApp Message Template</label>
+                            <textarea id="whatsapp-template" rows="5"
+                                placeholder="Use {{name}}, {{company}}, {{requirement}}, {{budget}}, {{currency}} as variables"></textarea>
+                            <small style="color: var(--gray); font-size: 11px;">Variables: {{name}}, {{company}},
+                                {{requirement}}, {{budget}}, {{currency}}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pipeline Stages</label>
+                            <div id="pipeline-stages-list" style="margin-bottom: 10px;">
+                                <!-- Stages will be rendered here -->
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="new-stage-input" placeholder="New stage name" style="flex: 1;">
+                                <button type="button" class="btn btn-secondary" onclick="addPipelineStage()">Add
+                                    Stage</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Auto Lead Assignment To (Email/Name)</label>
+                            <input type="text" id="auto-assign" placeholder="Sales rep name or email">
+                        </div>
+
+                        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+                        <button class="btn btn-secondary" onclick="exportAllData()" style="margin-left: 10px;">📊 Export
+                            All Data</button>
+                        <button class="btn btn-danger" onclick="clearAllData()" style="margin-left: 10px;">🗑️ Clear
+                            Database</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Lead Modal -->
+    <div id="add-lead-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeAddLeadModal()">&times;</span>
+            <div class="modal-header">Add New Lead</div>
+
+            <form id="add-lead-form" onsubmit="addLead(event)">
+                <div class="form-group">
+                    <label>Lead Name *</label>
+                    <input type="text" id="lead-name" required placeholder="Full name">
+                </div>
+
+                <div class="form-group">
+                    <label>Company Name *</label>
+                    <input type="text" id="company-name" required placeholder="Company name">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="phone-number" required placeholder="+91 9876543210">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="email@company.com">
+                </div>
+
+                <div class="form-group">
+                    <label id="requirement-label">Requirement *</label>
+                    <div id="requirement-container">
+                        <select id="requirement-input" required>
+                            <option value="" disabled selected>Select Transformer Type</option>
+                            <option value="Power Transformer (100-500 KVA)">Power Transformer (100-500 KVA)</option>
+                            <option value="Power Transformer (500 KVA - 5 MVA)">Power Transformer (500 KVA - 5 MVA)
+                            </option>
+                            <option value="Power Transformer (5+ MVA)">Power Transformer (5+ MVA)</option>
+                            <option value="Distribution Transformer">Distribution Transformer</option>
+                            <option value="Dry Type Transformer">Dry Type Transformer</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Budget (Approx) *</label>
+                    <div style="display: flex; gap: 8px;">
+                        <select id="currency-selector" style="width: 80px; display: none;">
+                            <option value="₹">₹</option>
+                        </select>
+                        <select id="budget-amount" required style="flex: 1;">
+                            <option value="" disabled selected>Select Budget Range</option>
+                            <option value="₹5L - ₹15L">₹5L - ₹15L</option>
+                            <option value="₹15L - ₹30L">₹15L - ₹30L</option>
+                            <option value="₹30L - ₹50L">₹30L - ₹50L</option>
+                            <option value="₹50L+">₹50L+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Lead Source *</label>
+                    <select id="source" required>
+                        <option value="">Select Source</option>
+                        <option value="gbp">Google Business Profile</option>
+                        <option value="website">Website Form</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="referral">Referral</option>
+                        <option value="manual">Manual Entry</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="status">
+                        <option value="cold">❄️ Cold</option>
+                        <option value="warm">🟠 Warm</option>
+                        <option value="hot">🔥 Hot</option>
+                        <option value="converted">✅ Converted</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Deal Value *</label>
+                        <input type="number" id="deal-value" required placeholder="Project value">
+                    </div>
+                    <div class="form-group">
+                        <label>Won Amount (if any)</label>
+                        <input type="number" id="won-amount" placeholder="Collected amount">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="notes" placeholder="Any additional information..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">✅ Add Lead</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddLeadModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="add-task-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeAddTaskModal()">&times;</span>
+            <div class="modal-header">Create New Task</div>
+            <form id="add-task-form" onsubmit="addTask(event)">
+                <div class="form-group">
+                    <label>Task Description *</label>
+                    <input type="text" id="task-desc" required placeholder="Follow up with lead...">
+                </div>
+                <div class="form-group">
+                    <label>Related Lead</label>
+                    <select id="task-lead-id">
+                        <option value="">None</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Assign To</label>
+                    <select id="task-assignee">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Due Date *</label>
+                    <input type="date" id="task-due-date" required>
+                </div>
+                <div class="form-group">
+                    <label>Priority</label>
+                    <select id="task-priority">
+                        <option value="high">🔴 High</option>
+                        <option value="medium">🟠 Medium</option>
+                        <option value="low">🟡 Low</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Task</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddTaskModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Team Member Modal -->
+    <div id="add-team-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeAddTeamMemberModal()">&times;</span>
+            <div class="modal-header">Add Team Member</div>
+            <form id="add-team-form" onsubmit="addTeamMember(event)">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="member-name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="member-email" required placeholder="john@company.com">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="member-role">
+                        <option value="Sales">Sales Rep</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Add Member</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAddTeamMemberModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lead Details Modal -->
+    <div id="lead-details-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeLeadDetailsModal()">&times;</span>
+            <div class="modal-header" id="detail-modal-title">Lead Details</div>
+
+            <div id="lead-details-content" style="font-size: 14px;">
+                <!-- Details will be populated here -->
+            </div>
+
+            <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn btn-primary" onclick="sendWhatsAppMessage()">💬 Send WhatsApp</button>
+                <button class="btn btn-primary" onclick="editLead()">✏️ Edit</button>
+                <button class="btn btn-secondary" onclick="schedulePipeline()">📅 Schedule Follow-up</button>
+                <button class="btn btn-success" onclick="markConverted()">✅ Mark Converted</button>
+                <button class="btn btn-danger" onclick="deleteLead()">🗑️ Delete</button>
+                <button class="btn btn-secondary" onclick="closeLeadDetailsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize with localStorage - Using Universal Keys
+        let leads = JSON.parse(localStorage.getItem('business_crm_leads')) ||
+            JSON.parse(localStorage.getItem('transformer_leads')) || [];
+
+        let settings = JSON.parse(localStorage.getItem('business_crm_settings')) ||
+            JSON.parse(localStorage.getItem('transformer_settings')) || {
+            companyName: 'Business CRM',
+            companyLogo: '',
+            industryType: 'Manufacturing',
+            whatsappNumber: '',
+            companyEmail: '',
+            whatsappTemplate: 'Hi {{name}},\n\nThank you for your interest in our business! Based on your requirement: {{requirement}} (Budget: {{currency}}{{budget}}), we would like to discuss this further. Are you available for a quick call?\n\nBest regards,\n{{company}} Team',
+            defaultRequirement: 'Standard requirement template',
+            autoAssign: '',
+            pipelineStages: ['Inquiry', 'Qualified', 'Proposal Sent', 'Negotiation', 'Converted']
+        };
+
+        let tasks = JSON.parse(localStorage.getItem('business_crm_tasks')) || [];
+        let teamMembers = JSON.parse(localStorage.getItem('business_crm_team')) || [
+            { id: 1, name: 'Admin', role: 'Admin', email: 'admin@company.com', status: 'Active' }
+        ];
+
+        // Save initial data to new keys if it was migrated
+        if (!localStorage.getItem('business_crm_leads') && leads.length > 0) {
+            localStorage.setItem('business_crm_leads', JSON.stringify(leads));
+        }
+
+        let currentLeadId = null;
+
+        // Branding Functions
+        function applyBranding() {
+            const displayTitle = settings.companyName || 'Business CRM';
+            document.title = displayTitle + ' - Dashboard';
+            document.getElementById('company-name-display').textContent = displayTitle;
+
+            const logoContainer = document.getElementById('sidebar-logo-container');
+            if (settings.companyLogo) {
+                logoContainer.innerHTML = `
+                    <img src="${settings.companyLogo}" alt="Logo">
+                    <span id="company-name-display">${displayTitle}</span>
+                `;
+            } else {
+                logoContainer.innerHTML = `
+                    <div class="logo-placeholder" id="logo-icon">⚡</div>
+                    <span id="company-name-display">${displayTitle}</span>
+                `;
+            }
+        }
+
+        function previewLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('logo-preview');
+                    preview.src = e.target.result;
+                    document.getElementById('logo-preview-container').style.display = 'block';
+                    settings.companyLogo = e.target.result; // Temporarily store in memory
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateIndustryFields() {
+            const industry = settings.industryType || 'Manufacturing';
+            const reqLabel = document.getElementById('requirement-label');
+            const reqInput = document.getElementById('requirement-input');
+
+            const fieldNames = {
+                'Manufacturing': 'Product Specification',
+                'Service Provider': 'Service Required',
+                'Agency': 'Project Scope',
+                'Healthcare': 'Medical Service/Supply',
+                'Education': 'Course/Training',
+                'Real Estate': 'Property Interest',
+                'Retail': 'Product/Bulk Order',
+                'Custom': 'Requirement'
+            };
+
+            if (reqLabel) reqLabel.textContent = (fieldNames[industry] || 'Requirement') + ' *';
+            if (reqInput) reqInput.placeholder = `Enter ${fieldNames[industry] || 'Requirement'} details...`;
+        }
+
+        // Navigation Logic & Section Control
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+
+                // Update UI state
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                // Update page title
+                const sectionName = this.querySelector('span').textContent;
+                document.getElementById('page-title').textContent = sectionName;
+                document.querySelectorAll('.section-content').forEach(s => s.style.display = 'none');
+                document.getElementById(section + '-section').style.display = 'block';
+
+                if (section === 'dashboard') renderDashboard();
+                if (section === 'leads') renderAllLeads();
+                if (section === 'clients') renderClients();
+                if (section === 'pipeline') renderPipeline();
+                if (section === 'tasks') renderTasks();
+                if (section === 'whatsapp') renderWhatsAppQueue();
+                if (section === 'reports') updateReports();
+                if (section === 'team') renderTeam();
+                if (section === 'settings') loadSettings();
+            });
+        });
+
+        // Sidebar Toggle Logic
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-sidebar');
+
+        if (toggleBtn && sidebar) {
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                toggleBtn.querySelector('span').textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+            });
+        }
+
+        // Search and Filter Listeners
+        document.getElementById('search-input').addEventListener('input', filterLeads);
+        document.getElementById('status-filter').addEventListener('change', filterLeads);
+        document.getElementById('source-filter').addEventListener('change', filterLeads);
+
+        function filterLeads() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const sourceFilter = document.getElementById('source-filter').value;
+
+            const filtered = leads.filter(lead => {
+                const matchesSearch = lead.name.toLowerCase().includes(searchTerm) ||
+                    lead.company.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter === "" || lead.status === statusFilter;
+                const matchesSource = sourceFilter === "" || lead.source === sourceFilter;
+                return matchesSearch && matchesStatus && matchesSource;
+            });
+
+            renderLeadsTable(filtered);
+        }
+
+        function renderLeadsTable(data) {
+            const tbody = document.getElementById('leads-tbody');
+            tbody.innerHTML = '';
+
+            const recentLeads = data.slice(-10).reverse();
+            recentLeads.forEach(lead => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="lead-name">${lead.name}</span></td>
+                    <td>${lead.company}</td>
+                    <td>${lead.phone}</td>
+                    <td>${lead.requirement}</td>
+                    <td><span class="source-badge ${lead.source}">${getSourceLabel(lead.source)}</span></td>
+                    <td><span class="status ${lead.status}">${getStatusLabel(lead.status)}</span></td>
+                    <td>${new Date(lead.createdDate).toLocaleDateString('en-IN')}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="viewLeadDetails(${lead.id})">View</button>
+                            <button class="action-btn" onclick="sendWhatsApp(${lead.id})">WhatsApp</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Add Lead
+        function openAddLeadModal() {
+            document.getElementById('add-lead-modal').classList.add('active');
+        }
+
+        function closeAddLeadModal() {
+            document.getElementById('add-lead-modal').classList.remove('active');
+            document.getElementById('add-lead-form').reset();
+        }
+
+        function addLead(event) {
+            event.preventDefault();
+
+            const lead = {
+                id: Date.now(),
+                name: document.getElementById('lead-name').value,
+                company: document.getElementById('company-name').value,
+                phone: document.getElementById('phone-number').value,
+                email: document.getElementById('email').value,
+                requirement: document.getElementById('requirement-input').value,
+                budget: document.getElementById('budget-amount').value,
+                currency: document.getElementById('currency-selector').value,
+                dealValue: parseFloat(document.getElementById('deal-value').value) || 0,
+                wonAmount: parseFloat(document.getElementById('won-amount').value) || 0,
+                source: document.getElementById('source').value,
+                status: document.getElementById('status').value,
+                notes: document.getElementById('notes').value,
+                createdDate: new Date().toISOString(),
+                followUpDate: null,
+                whatsappSent: false,
+                emailSent: false,
+                pipeline: settings.pipelineStages[0] || 'Inquiry'
+            };
+
+            leads.push(lead);
+            saveData();
+            closeAddLeadModal();
+            renderDashboard();
+            showToast('✅ Lead added successfully!');
+        }
+
+        // Render Dashboard
+        function renderDashboard() {
+            filterLeads(); // This will render the table with current filters
+
+            // Update metrics
+            const hotLeads = leads.filter(l => l.status === 'hot').length;
+            const totalLeads = leads.length;
+            const convertedLeads = leads.filter(l => l.pipeline === 'Converted').length;
+            const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
+
+            let pipelineValue = 0;
+            let totalRevenue = 0;
+            leads.forEach(lead => {
+                if (lead.pipeline === 'Converted' || lead.status === 'converted') {
+                    totalRevenue += (parseFloat(lead.wonAmount) || 0);
+                } else {
+                    pipelineValue += (parseFloat(lead.dealValue) || 0);
+                }
+            });
+
+            document.getElementById('total-leads').textContent = totalLeads;
+            document.getElementById('hot-leads').textContent = hotLeads;
+            document.getElementById('conversion-rate').textContent = conversionRate + '%';
+
+            const currency = settings.currency || '₹';
+            document.getElementById('pipeline-value').textContent =
+                currency + (pipelineValue > 100000 ? (pipelineValue / 100000).toFixed(1) + 'L' : pipelineValue.toLocaleString());
+            document.getElementById('total-revenue').textContent =
+                currency + (totalRevenue > 100000 ? (totalRevenue / 100000).toFixed(1) + 'L' : totalRevenue.toLocaleString());
+        }
+
+        // Render Clients
+        function renderClients() {
+            const tbody = document.getElementById('clients-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const convertedLeads = leads.filter(l => l.pipeline === 'Converted' || l.status === 'converted');
+
+            convertedLeads.forEach(lead => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${lead.name}</strong></td>
+                    <td>${lead.company}</td>
+                    <td>${lead.currency || '₹'}${parseFloat(lead.dealValue || 0).toLocaleString()}</td>
+                    <td>${lead.currency || '₹'}${parseFloat(lead.wonAmount || 0).toLocaleString()}</td>
+                    <td><span class="status converted">Active Client</span></td>
+                    <td>
+                        <button class="action-btn" onclick="viewLeadDetails(${lead.id})">Details</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // View Lead Details
+        function viewLeadDetails(id) {
+            currentLeadId = id;
+            const lead = leads.find(l => l.id === id);
+
+            if (lead) {
+                document.getElementById('detail-modal-title').textContent = lead.name + ' - ' + lead.company;
+                document.getElementById('lead-details-content').innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <p style="margin-bottom: 8px;"><strong>Company:</strong> ${lead.company}</p>
+                            <p style="margin-bottom: 8px;"><strong>Phone:</strong> <a href="tel:${lead.phone}">${lead.phone}</a></p>
+                            <p style="margin-bottom: 8px;"><strong>Email:</strong> ${lead.email || 'N/A'}</p>
+                            <p style="margin-bottom: 8px;"><strong>Requirement:</strong> ${lead.requirement}</p>
+                        </div>
+                        <div>
+                            <p style="margin-bottom: 8px;"><strong>Deal Value:</strong> ${lead.currency || '₹'}${parseFloat(lead.dealValue || 0).toLocaleString()}</p>
+                            <p style="margin-bottom: 8px;"><strong>Won Amount:</strong> ${lead.currency || '₹'}${parseFloat(lead.wonAmount || 0).toLocaleString()}</p>
+                            <p style="margin-bottom: 8px;"><strong>Source:</strong> ${getSourceLabel(lead.source)}</p>
+                            <p style="margin-bottom: 8px;"><strong>Status:</strong> ${getStatusLabel(lead.status)}</p>
+                        </div>
+                    </div>
+                    <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
+                    <p><strong>Notes:</strong> ${lead.notes || 'N/A'}</p>
+                    <p style="margin-top: 10px; font-size: 12px; color: var(--gray);">Added on ${new Date(lead.createdDate).toLocaleString('en-IN')}</p>
+                `;
+                document.getElementById('lead-details-modal').classList.add('active');
+            }
+        }
+
+        function closeLeadDetailsModal() {
+            document.getElementById('lead-details-modal').classList.remove('active');
+            currentLeadId = null;
+        }
+
+        // WhatsApp Functions
+        function sendWhatsApp(id) {
+            const lead = leads.find(l => l.id === id);
+            if (lead) {
+                const phone = lead.phone.replace(/[^0-9]/g, '');
+                let message = settings.whatsappTemplate || `Hi ${lead.name},\n\nThank you for your interest in our services!`;
+
+                // Replace variables
+                message = message.replace(/{{name}}/g, lead.name)
+                    .replace(/{{company}}/g, settings.companyName || 'our')
+                    .replace(/{{requirement}}/g, lead.requirement)
+                    .replace(/{{budget}}/g, isNaN(lead.budget) ? lead.budget : parseFloat(lead.budget || 0).toLocaleString())
+                    .replace(/{{currency}}/g, lead.currency || '₹');
+
+                const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+
+                lead.whatsappSent = true;
+                lead.followUpDate = new Date().toISOString();
+                saveData();
+            }
+        }
+
+        function sendWhatsAppMessage() {
+            sendWhatsApp(currentLeadId);
+            closeLeadDetailsModal();
+        }
+
+        // Render All Leads
+        function renderAllLeads() {
+            const tbody = document.getElementById('all-leads-tbody');
+            tbody.innerHTML = '';
+            leads.forEach(lead => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${lead.name}</strong></td>
+                    <td>${lead.company}</td>
+                    <td>${lead.phone}</td>
+                    <td>${lead.email || '-'}</td>
+                    <td>${lead.requirement}</td>
+                    <td>${isNaN(lead.budget) ? lead.budget : (lead.currency || '₹') + parseFloat(lead.budget || 0).toLocaleString()}</td>
+                    <td><span class="status ${lead.status}">${getStatusLabel(lead.status)}</span></td>
+                    <td>${lead.followUpDate ? new Date(lead.followUpDate).toLocaleDateString('en-IN') : '-'}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewLeadDetails(${lead.id})">View</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Render Pipeline
+        function renderPipeline() {
+            const stages = settings.pipelineStages || ['Inquiry', 'Qualified', 'Proposal Sent', 'Negotiation', 'Converted'];
+            const container = document.getElementById('pipeline-container');
+            container.innerHTML = '';
+
+            stages.forEach(stage => {
+                const stageLeads = leads.filter(l => l.pipeline === stage);
+                const column = document.createElement('div');
+                column.className = 'pipeline-column';
+
+                let columnHTML = `<div class="pipeline-title">
+                    <span>${stage}</span>
+                    <span style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 4px;">${stageLeads.length}</span>
+                </div>`;
+
+                stageLeads.forEach(lead => {
+                    columnHTML += `
+                        <div class="pipeline-card" onclick="viewLeadDetails(${lead.id})">
+                            <strong>${lead.name}</strong>
+                            <small>${lead.company}</small>
+                            <div style="margin-top: 8px; font-size: 10px; color: var(--primary); font-weight: 600;">${lead.currency || '₹'}${parseFloat(lead.dealValue || 0).toLocaleString()}</div>
+                        </div>
+                    `;
+                });
+
+                column.innerHTML = columnHTML;
+                container.appendChild(column);
+            });
+        }
+
+        // WhatsApp Queue
+        function renderWhatsAppQueue() {
+            const tbody = document.getElementById('whatsapp-tbody');
+            tbody.innerHTML = '';
+            const pendingLeads = leads.filter(l => !l.whatsappSent && l.status !== 'converted');
+
+            pendingLeads.forEach(lead => {
+                const daysAgo = Math.floor((new Date() - new Date(lead.createdDate)) / (1000 * 60 * 60 * 24));
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="checkbox" class="lead-checkbox" value="${lead.id}"></td>
+                    <td>${lead.name}</td>
+                    <td>${lead.phone}</td>
+                    <td>${lead.company}</td>
+                    <td>${lead.requirement}</td>
+                    <td>${daysAgo} days ago</td>
+                    <td><button class="action-btn" onclick="sendWhatsApp(${lead.id})">Send</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Reports
+        function updateReports() {
+            const gbpCount = leads.filter(l => l.source === 'gbp').length;
+            const websiteCount = leads.filter(l => l.source === 'website').length;
+            const whatsappCount = leads.filter(l => l.source === 'whatsapp').length;
+
+            const hotCount = leads.filter(l => l.status === 'hot').length;
+            const warmCount = leads.filter(l => l.status === 'warm').length;
+            const coldCount = leads.filter(l => l.status === 'cold').length;
+            const convertedCount = leads.filter(l => l.pipeline === 'Converted').length;
+
+            document.getElementById('gbp-count').textContent = gbpCount;
+            document.getElementById('website-count').textContent = websiteCount;
+            document.getElementById('whatsapp-count').textContent = whatsappCount;
+
+            document.getElementById('hot-count').textContent = hotCount;
+            document.getElementById('warm-count').textContent = warmCount;
+            document.getElementById('cold-count').textContent = coldCount;
+            document.getElementById('converted-count').textContent = convertedCount;
+        }
+
+        // Settings Management
+        function loadSettings() {
+            document.getElementById('settings-company-name').value = settings.companyName || '';
+            document.getElementById('industry-type').value = settings.industryType || 'Manufacturing';
+            document.getElementById('whatsapp-number').value = settings.whatsappNumber;
+            document.getElementById('company-email').value = settings.companyEmail;
+            document.getElementById('whatsapp-template').value = settings.whatsappTemplate || '';
+            document.getElementById('default-requirement').value = settings.defaultRequirement;
+            document.getElementById('auto-assign').value = settings.autoAssign;
+
+            if (settings.companyLogo) {
+                document.getElementById('logo-preview').src = settings.companyLogo;
+                document.getElementById('logo-preview-container').style.display = 'block';
+            }
+            renderPipelineStagesSettings();
+        }
+
+        function renderPipelineStagesSettings() {
+            const list = document.getElementById('pipeline-stages-list');
+            if (!list) return;
+            list.innerHTML = '';
+            settings.pipelineStages.forEach((stage, index) => {
+                const div = document.createElement('div');
+                div.style = 'display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px 12px; border-radius: 6px; margin-bottom: 4px; border: 1px solid #e2e8f0;';
+                div.innerHTML = `
+                    <span style="font-size: 13px; font-weight: 500;">${stage}</span>
+                    <button onclick="deletePipelineStage(${index})" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px;">&times;</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function addPipelineStage() {
+            const input = document.getElementById('new-stage-input');
+            const newStage = input.value.trim();
+            if (newStage && !settings.pipelineStages.includes(newStage)) {
+                settings.pipelineStages.push(newStage);
+                input.value = '';
+                renderPipelineStagesSettings();
+            }
+        }
+
+        function deletePipelineStage(index) {
+            if (settings.pipelineStages.length <= 1) {
+                showToast('❌ At least one stage is required');
+                return;
+            }
+            settings.pipelineStages.splice(index, 1);
+            renderPipelineStagesSettings();
+        }
+
+        function saveSettings() {
+            settings.companyName = document.getElementById('settings-company-name').value;
+            settings.industryType = document.getElementById('industry-type').value;
+            settings.whatsappNumber = document.getElementById('whatsapp-number').value;
+            settings.companyEmail = document.getElementById('company-email').value;
+            settings.whatsappTemplate = document.getElementById('whatsapp-template').value;
+            settings.defaultRequirement = document.getElementById('default-requirement').value;
+            settings.autoAssign = document.getElementById('auto-assign').value;
+
+            localStorage.setItem('business_crm_settings', JSON.stringify(settings));
+            applyBranding();
+            updateIndustryFields();
+            showToast('⚙️ Settings saved successfully!');
+        }
+
+        function exportLeads() {
+            if (leads.length === 0) {
+                showToast('❌ No leads to export');
+                return;
+            }
+            let csv = 'Name,Company,Phone,Email,Requirement,Budget,Source,Status,Pipeline,Created Date\n';
+            leads.forEach(lead => {
+                csv += `"${lead.name}","${lead.company}","${lead.phone}","${lead.email}","${lead.requirement}","${lead.budget}","${lead.source}","${lead.status}","${lead.pipeline}","${new Date(lead.createdDate).toLocaleDateString('en-IN')}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `leads_export_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportAllData() {
+            const data = { leads, settings };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `crm_full_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will permanently delete ALL leads and settings. Are you absolutely sure?')) {
+                localStorage.removeItem('transformer_leads');
+                localStorage.removeItem('transformer_settings');
+                leads = [];
+                settings = { whatsappNumber: '', companyEmail: '', defaultRequirement: '', autoAssign: '' };
+                renderDashboard();
+                showToast('🗑️ Database cleared');
+            }
+        }
+
+        // Actions
+        function markConverted() {
+            const lead = leads.find(l => l.id === currentLeadId);
+            if (lead) {
+                lead.pipeline = 'Converted';
+                lead.status = 'converted';
+                saveData();
+                closeLeadDetailsModal();
+                renderDashboard();
+                showToast('🎉 Lead marked as converted!');
+            }
+        }
+
+        function deleteLead() {
+            if (confirm('Are you sure you want to delete this lead?')) {
+                leads = leads.filter(l => l.id !== currentLeadId);
+                saveData();
+                closeLeadDetailsModal();
+                renderDashboard();
+                showToast('🗑️ Lead deleted');
+            }
+        }
+
+        function schedulePipeline() {
+            const lead = leads.find(l => l.id === currentLeadId);
+            if (lead) {
+                const nextStage = prompt('Enter next pipeline stage (Qualified, Proposal Sent, Negotiation):', lead.pipeline);
+                if (nextStage) {
+                    lead.pipeline = nextStage;
+                    saveData();
+                    closeLeadDetailsModal();
+                    renderPipeline();
+                    showToast(`➡️ Moved to ${nextStage}`);
+                }
+            }
+        }
+
+        function editLead() {
+            const lead = leads.find(l => l.id === currentLeadId);
+            if (lead) {
+                document.getElementById('lead-name').value = lead.name;
+                document.getElementById('company-name').value = lead.company;
+                document.getElementById('phone-number').value = lead.phone;
+                document.getElementById('email').value = lead.email;
+                document.getElementById('requirement-input').value = lead.requirement;
+                document.getElementById('budget-amount').value = lead.budget;
+                document.getElementById('currency-selector').value = lead.currency || '₹';
+                document.getElementById('deal-value').value = lead.dealValue || 0;
+                document.getElementById('won-amount').value = lead.wonAmount || 0;
+                document.getElementById('source').value = lead.source;
+                document.getElementById('status').value = lead.status;
+                document.getElementById('notes').value = lead.notes;
+
+                // Remove the lead and open modal to "re-add" (update)
+                leads = leads.filter(l => l.id !== currentLeadId);
+                closeLeadDetailsModal();
+                openAddLeadModal();
+            }
+        }
+
+        // Task Management Logic
+        function renderTasks() {
+            const tbody = document.getElementById('tasks-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            tasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+            tasks.forEach(task => {
+                const lead = leads.find(l => l.id == task.leadId);
+                const member = teamMembers.find(m => m.id == task.assigneeId);
+                const isOverdue = new Date(task.dueDate) < new Date() && task.status !== 'Completed';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div style="font-weight: 600;">${task.description}</div>
+                        <small style="color: var(--gray);">${lead ? 'Lead: ' + lead.name : 'No Lead'}</small>
+                    </td>
+                    <td>${member ? member.name : 'Unassigned'}</td>
+                    <td><span style="${isOverdue ? 'color: var(--danger); font-weight: 700;' : ''}">${new Date(task.dueDate).toLocaleDateString()}</span></td>
+                    <td><span class="status ${task.status.toLowerCase()}">${task.status}</span></td>
+                    <td>${getPriorityBadge(task.priority)}</td>
+                    <td>
+                        <button class="action-btn" onclick="toggleTaskStatus(${task.id})">${task.status === 'Completed' ? 'Reopen' : 'Done'}</button>
+                        <button class="btn-danger action-btn" onclick="deleteTask(${task.id})">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function getPriorityBadge(p) {
+            if (p === 'high') return '🔴 High';
+            if (p === 'medium') return '🟠 Medium';
+            return '🟡 Low';
+        }
+
+        function openAddTaskModal() {
+            const leadSelect = document.getElementById('task-lead-id');
+            leadSelect.innerHTML = '<option value="">None</option>' +
+                leads.map(l => `<option value="${l.id}">${l.name} (${l.company})</option>`).join('');
+
+            const assigneeSelect = document.getElementById('task-assignee');
+            assigneeSelect.innerHTML = teamMembers.map(m => `<option value="${m.id}">${m.name} (${m.role})</option>`).join('');
+
+            document.getElementById('add-task-modal').classList.add('active');
+        }
+
+        function closeAddTaskModal() {
+            document.getElementById('add-task-modal').classList.remove('active');
+            document.getElementById('add-task-form').reset();
+        }
+
+        function addTask(event) {
+            event.preventDefault();
+            const task = {
+                id: Date.now(),
+                description: document.getElementById('task-desc').value,
+                leadId: document.getElementById('task-lead-id').value,
+                assigneeId: document.getElementById('task-assignee').value,
+                dueDate: document.getElementById('task-due-date').value,
+                priority: document.getElementById('task-priority').value,
+                status: 'Pending',
+                createdDate: new Date().toISOString()
+            };
+            tasks.push(task);
+            localStorage.setItem('business_crm_tasks', JSON.stringify(tasks));
+            closeAddTaskModal();
+            renderTasks();
+            showToast('✅ Task created successfully!');
+        }
+
+        function toggleTaskStatus(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.status = task.status === 'Completed' ? 'Pending' : 'Completed';
+                localStorage.setItem('business_crm_tasks', JSON.stringify(tasks));
+                renderTasks();
+            }
+        }
+
+        function deleteTask(id) {
+            if (confirm('Delete this task?')) {
+                tasks = tasks.filter(t => t.id !== id);
+                localStorage.setItem('business_crm_tasks', JSON.stringify(tasks));
+                renderTasks();
+            }
+        }
+
+        // Team Management Logic
+        function renderTeam() {
+            const tbody = document.getElementById('team-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            teamMembers.forEach(member => {
+                const assignedCount = leads.filter(l => l.assignedToId == member.id).length;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${member.name}</strong></td>
+                    <td><span class="source-badge ${member.role.toLowerCase()}">${member.role}</span></td>
+                    <td>${member.email}</td>
+                    <td>${assignedCount} leads</td>
+                    <td><span class="status ${member.status.toLowerCase() === 'active' ? 'converted' : 'cold'}">${member.status}</span></td>
+                    <td>
+                        <button class="action-btn" onclick="deleteMember(${member.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function openAddTeamMemberModal() {
+            document.getElementById('add-team-modal').classList.add('active');
+        }
+
+        function closeAddTeamMemberModal() {
+            document.getElementById('add-team-modal').classList.remove('active');
+            document.getElementById('add-team-form').reset();
+        }
+
+        function addTeamMember(event) {
+            event.preventDefault();
+            const member = {
+                id: Date.now(),
+                name: document.getElementById('member-name').value,
+                email: document.getElementById('member-email').value,
+                role: document.getElementById('member-role').value,
+                status: 'Active'
+            };
+            teamMembers.push(member);
+            localStorage.setItem('business_crm_team', JSON.stringify(teamMembers));
+            closeAddTeamMemberModal();
+            renderTeam();
+            showToast('✅ Team member added!');
+        }
+
+        function deleteMember(id) {
+            if (id === 1) {
+                showToast('❌ Cannot delete the admin account');
+                return;
+            }
+            if (confirm('Are you sure you want to remove this team member?')) {
+                teamMembers = teamMembers.filter(m => m.id !== id);
+                localStorage.setItem('business_crm_team', JSON.stringify(teamMembers));
+                renderTeam();
+            }
+        }
+
+        // Global Helpers
+        function saveData() {
+            localStorage.setItem('business_crm_leads', JSON.stringify(leads));
+        }
+
+        function getSourceLabel(source) {
+            const labels = {
+                'gbp': '🔍 Google Profile',
+                'website': '🌐 Website',
+                'whatsapp': '💬 WhatsApp',
+                'linkedin': '📱 LinkedIn',
+                'referral': '🤝 Referral',
+                'manual': '📝 Manual'
+            };
+            return labels[source] || source;
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'hot': '🔥 Hot',
+                'warm': '🟠 Warm',
+                'cold': '❄️ Cold',
+                'converted': '✅ Converted'
+            };
+            return labels[status] || status;
+        }
+
+        function showToast(message) {
+            alert(message);
+        }
+
+        // Additional Bulk WhatsApp Logic
+        function sendBulkWhatsApp() {
+            const selectedLeads = [];
+            document.querySelectorAll('.lead-checkbox:checked').forEach(checkbox => {
+                selectedLeads.push(checkbox.value);
+            });
+
+            if (selectedLeads.length === 0) {
+                showToast('❌ No leads selected');
+                return;
+            }
+
+            if (confirm(`Do you want to open WhatsApp for ${selectedLeads.length} selected leads?`)) {
+                selectedLeads.forEach((id, index) => {
+                    setTimeout(() => {
+                        sendWhatsApp(parseInt(id));
+                    }, index * 2000); // 2 second delay between openings
+                });
+            }
+        }
+
+        document.getElementById('select-all')?.addEventListener('change', (e) => {
+            document.querySelectorAll('.lead-checkbox').forEach(cb => cb.checked = e.target.checked);
+        });
+
+        function filterAllLeads() {
+            const searchTerm = document.getElementById('all-leads-search').value.toLowerCase();
+            const statusFilter = document.getElementById('all-leads-status').value;
+
+            const filtered = leads.filter(lead => {
+                const matchesSearch = lead.name.toLowerCase().includes(searchTerm) ||
+                    lead.company.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter === "" || lead.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            renderAllLeadsList(filtered);
+        }
+
+        function renderAllLeadsList(data) {
+            const tbody = document.getElementById('all-leads-tbody');
+            tbody.innerHTML = '';
+            data.forEach(lead => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${lead.name}</strong></td>
+                    <td>${lead.company}</td>
+                    <td>${lead.phone}</td>
+                    <td>${lead.email || '-'}</td>
+                    <td>${lead.requirement}</td>
+                    <td>${isNaN(lead.budget) ? lead.budget : (lead.currency || '₹') + parseFloat(lead.budget || 0).toLocaleString()}</td>
+                    <td><span class="status ${lead.status}">${getStatusLabel(lead.status)}</span></td>
+                    <td>${lead.followUpDate ? new Date(lead.followUpDate).toLocaleDateString('en-IN') : '-'}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewLeadDetails(${lead.id})">View</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Initialize
+        applyBranding();
+        updateIndustryFields();
+        renderDashboard();
+    </script>
+</body>
+
+</html>

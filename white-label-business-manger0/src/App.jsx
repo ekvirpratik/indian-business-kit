@@ -18,16 +18,22 @@ function App() {
       const client = getSupabaseClient(user.id);
       const email = user.primaryEmailAddress?.emailAddress;
 
+      console.log('[SUB CHECK] Clerk user.id:', user.id);
+      console.log('[SUB CHECK] Clerk email:', email);
+
       client
         .from('subscriptions')
         .select('*')
         .or(`user_id.eq.${user.id},email.eq.${email}`)
         .then(({ data, error }) => {
+          console.log('[SUB CHECK] Supabase response data:', data);
+          console.log('[SUB CHECK] Supabase response error:', error);
           if (error && error.code !== 'PGRST116') {
             console.error('Error fetching subscription:', error);
             toast.error('Error fetching subscription: ' + error.message);
           }
           const subData = Array.isArray(data) ? data[0] : data;
+          console.log('[SUB CHECK] Resolved subData:', subData, '=> active:', subData?.active);
           setIsSubscribed(!!(subData && subData.active));
         })
         .catch(err => {

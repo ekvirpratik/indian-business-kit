@@ -1,0 +1,4 @@
+# This is a private SaaS app behind authentication.
+# Disallow all crawlers from indexing protected content.
+User-agent: *
+Disallow: /
