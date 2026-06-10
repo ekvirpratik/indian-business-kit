@@ -25,52 +25,50 @@ import {
 } from "lucide-react"
 
 // ─── Tool data ────────────────────────────────────────────────────────────────
-const FEATURED_TOOL = {
-  id: "inventory-billing",
-  icon: Package,
-  name: "Inventory & Billing Manager",
-  tagline: "Manage stock and invoices effortlessly.",
-  description:
-    "Keep track of your stock levels in real-time, generate professional GST-compliant invoices in seconds, and manage your customers and suppliers from a single dashboard.",
-  features: ["Stock Tracking", "GST Invoice Generator", "Supplier Management", "Financial Reports"],
-}
-
-const COMING_SOON_TOOLS = [
+const ACTIVE_TOOLS = [
+  {
+    id: "inventory-billing",
+    icon: Package,
+    name: "Inventory & Billing Manager",
+    tagline: "Manage stock and invoices effortlessly.",
+    description:
+      "Keep track of your stock levels in real-time, generate professional GST-compliant invoices in seconds, and manage your customers and suppliers from a single dashboard.",
+    features: ["Stock Tracking", "GST Invoice Generator", "Supplier Management", "Financial Reports"],
+    link: "https://inventory-management.indianbusinesskit.in",
+  },
   {
     id: "crm",
     icon: Users,
     name: "CRM & Lead Manager",
     tagline: "Never lose a lead again.",
-    description: "Capture, track and nurture every potential customer through a visual pipeline with AI-powered lead scoring.",
+    description: "Capture, track and nurture every potential customer through a visual pipeline without lead scoring.",
+    features: ["Visual Pipeline", "Lead Tracking", "Automated Follow-ups", "WhatsApp Integration"],
+    link: "https://crm.indianbusinesskit.in",
+  }
+]
+
+const COMING_SOON_TOOLS = [
+  {
+    id: "HR Management system",
+    icon: Megaphone,
+    name: "HR Management system",
+    tagline: "Manage employee records and attendance in one place.",
+    description: "Manage employee records, track attendance, and generate reports with ease.",
   },
   {
-    id: "ai-marketing",
-    icon: Megaphone,
-    name: "AI Marketing",
+    id: "Marketing Content Genrator",
+    icon: BarChart3,
+    name: "Marketing Content Genrator",
     tagline: "Grow on autopilot.",
     description: "Generate scroll-stopping social posts, WhatsApp campaigns, and SEO content using AI.",
   },
   {
-    id: "analytics",
-    icon: BarChart3,
-    name: "Business Analytics",
-    tagline: "Know your numbers cold.",
-    description: "Real-time dashboards showing revenue trends, top customers, best-selling products.",
-  },
-  {
-    id: "whatsapp-suite",
-    icon: MessageSquare,
-    name: "WhatsApp Suite",
-    tagline: "Your business on WhatsApp.",
-    description: "Send invoices, payment reminders, promotional messages and support replies.",
-  },
-  {
-    id: "digital-guidance",
+    id: "Learning Digital Marketing",
     icon: Globe,
-    name: "Digital Guidance",
-    tagline: "Your digital journey, guided.",
-    description: "Step-by-step playbooks for taking your business online. From Google Business to ads.",
-  },
+    name: "Learning Digital Marketing",
+    tagline: "Your path to digital success.",
+    description: "Learn how to take your business online with step-by-step courses and expert guidance.",
+  }
 ]
 
 // ─── Subscription state ───────────────────────────────────────────────────────
@@ -134,7 +132,7 @@ function ExpiryPopup({ expiryDate, onClose }: { expiryDate: string | null; onClo
 }
 
 // ─── Featured Tool Card ───────────────────────────────────────────────────────
-function FeaturedToolCard({ subStatus }: { subStatus: "loading" | "active" | "expired" | "none" }) {
+function FeaturedToolCard({ tool, subStatus }: { tool: typeof ACTIVE_TOOLS[0]; subStatus: "loading" | "active" | "expired" | "none" }) {
   const isActive = subStatus === "active"
   const isLoading = subStatus === "loading"
 
@@ -144,24 +142,24 @@ function FeaturedToolCard({ subStatus }: { subStatus: "loading" | "active" | "ex
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="relative w-full max-w-5xl mx-auto mb-20 group"
+      className="relative w-full h-full group"
     >
-      <div className="rounded-[28px] border-2 border-[#18E299]/60 p-1.5 shadow-[0_8px_32px_rgba(24,226,153,0.15)] bg-white/50 backdrop-blur-md">
+      <div className="rounded-[28px] border-2 border-[#18E299]/60 p-1.5 shadow-[0_8px_32px_rgba(24,226,153,0.15)] bg-white/50 backdrop-blur-md h-full flex flex-col">
         <MagicCard
           mode="orb"
           glowFrom="rgba(24,226,153,0.3)"
           glowTo="rgba(24,226,153,0.1)"
           glowOpacity={0.8}
           glowSize={400}
-          className="rounded-[22px] h-full bg-white overflow-hidden border border-black/5 shadow-sm"
+          className="rounded-[22px] flex-1 bg-white overflow-hidden border border-black/5 shadow-sm flex flex-col"
         >
-          <div className="p-8 md:p-12 flex flex-col lg:flex-row gap-8 lg:gap-16 items-center">
-            {/* Left Col */}
+          <div className="p-8 md:p-10 flex flex-col gap-8 h-full">
+            {/* Top Col */}
             <div className="flex-1 space-y-6">
               <div className="flex items-center gap-3 mb-2">
                 <div className="flex size-12 items-center justify-center rounded-xl bg-[#18E299]/10 border border-[#18E299]/20">
                   <motion.div whileHover={{ rotate: [0, -10, 10, -5, 5, 0] }} transition={{ duration: 0.5 }}>
-                    <FEATURED_TOOL.icon className="size-6 text-[#0fa76e]" />
+                    <tool.icon className="size-6 text-[#0fa76e]" />
                   </motion.div>
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#18E299]/10 border border-[#18E299]/20">
@@ -171,9 +169,9 @@ function FeaturedToolCard({ subStatus }: { subStatus: "loading" | "active" | "ex
               </div>
 
               <div>
-                <h2 className="text-3xl lg:text-4xl font-bold text-[#0d0d0d] mb-2">{FEATURED_TOOL.name}</h2>
-                <p className="text-[#0fa76e] font-mono text-sm tracking-wide mb-4">{FEATURED_TOOL.tagline}</p>
-                <p className="text-[#666666] text-base leading-relaxed">{FEATURED_TOOL.description}</p>
+                <h2 className="text-3xl font-bold text-[#0d0d0d] mb-2">{tool.name}</h2>
+                <p className="text-[#0fa76e] font-mono text-sm tracking-wide mb-4">{tool.tagline}</p>
+                <p className="text-[#666666] text-base leading-relaxed">{tool.description}</p>
               </div>
 
               {/* CTA — dynamic based on sub status */}
@@ -183,7 +181,7 @@ function FeaturedToolCard({ subStatus }: { subStatus: "loading" | "active" | "ex
                     Checking…
                   </Button>
                 ) : isActive ? (
-                  <Link href="https://inventory-management.indianbusinesskit.in" target="_blank" rel="noopener noreferrer">
+                  <Link href={tool.link} target="_blank" rel="noopener noreferrer">
                     <Button className="rounded-full bg-[#18E299] text-[#0d0d0d] px-8 h-12 text-[15px] font-bold hover:bg-[#15c586] shadow-[0_2px_10px_rgba(24,226,153,0.3)] transition-all">
                       Launch App
                       <ArrowRight className="ml-2 size-4" />
@@ -200,12 +198,12 @@ function FeaturedToolCard({ subStatus }: { subStatus: "loading" | "active" | "ex
               </motion.div>
             </div>
 
-            {/* Right Col - Features */}
-            <div className="flex-1 w-full grid grid-cols-2 gap-4">
-              {FEATURED_TOOL.features.map((feature) => (
-                <div key={feature} className="flex flex-col justify-center p-5 rounded-2xl bg-black/2 border border-black/5">
-                  <CheckCircle2 className="size-5 text-[#18E299] mb-3" />
-                  <span className="text-sm font-medium text-[#0d0d0d]">{feature}</span>
+            {/* Bottom Col - Features */}
+            <div className="w-full grid grid-cols-2 gap-3 mt-auto pt-6 border-t border-black/5">
+              {tool.features.map((feature) => (
+                <div key={feature} className="flex flex-col justify-center p-4 rounded-xl bg-black/2 border border-black/5">
+                  <CheckCircle2 className="size-4 text-[#18E299] mb-2" />
+                  <span className="text-xs font-medium text-[#0d0d0d]">{feature}</span>
                 </div>
               ))}
             </div>
@@ -302,7 +300,7 @@ export default function ToolsPage() {
           >
             <span className="size-1.5 rounded-full bg-[#18E299]" />
             <span className="text-[11px] font-bold uppercase tracking-[1.5px] text-[#0d0d0d]">
-              1 Tool Live <span className="text-[#0d0d0d]/40 px-1">•</span> 5 More Coming Soon
+              2 Tools Live <span className="text-[#0d0d0d]/40 px-1">•</span> 4 More Coming Soon
             </span>
           </motion.div>
 
@@ -330,8 +328,12 @@ export default function ToolsPage() {
           </motion.p>
         </div>
 
-        {/* Featured Tool Card */}
-        <FeaturedToolCard subStatus={status} />
+        {/* Featured Tool Cards */}
+        <div className="mb-20 grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+          {ACTIVE_TOOLS.map((tool) => (
+            <FeaturedToolCard key={tool.id} tool={tool} subStatus={status} />
+          ))}
+        </div>
 
         {/* Coming Soon */}
         <div className="max-w-7xl mx-auto">
