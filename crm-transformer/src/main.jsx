@@ -10,7 +10,16 @@ import App from './App.jsx';
 // Suppress known Supabase Gotrue / LockManager or DevTools warnings from console
 const originalWarn = console.warn;
 console.warn = (...args) => {
-  if (args[0] && typeof args[0] === 'string' && (args[0].includes('LockManager') || args[0].includes('React DevTools') || args[0].includes('Multiple GoTrueClient instances'))) {
+  if (
+    args[0] && 
+    typeof args[0] === 'string' && 
+    (
+      args[0].includes('LockManager') || 
+      args[0].includes('React DevTools') || 
+      args[0].includes('Multiple GoTrueClient instances') ||
+      args[0].includes('deprecated parameters for the initialization function')
+    )
+  ) {
     return;
   }
   originalWarn(...args);
