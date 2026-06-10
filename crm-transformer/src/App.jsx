@@ -1,6 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useUser, useClerk, SignInButton } from '@clerk/react';
+import { useUser, useClerk, SignInButton, SignUpButton } from '@clerk/react';
 import { useCRM } from './context/CRMContext';
 import { getSupabaseClient } from './lib/supabaseClient';
 
@@ -149,6 +149,13 @@ function App() {
                 Sign In to CRM
               </button>
             </SignInButton>
+            <SignUpButton mode="modal">
+              <button
+                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 px-6 rounded-2xl border border-slate-700 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg cursor-pointer"
+              >
+                Create an Account
+              </button>
+            </SignUpButton>
             <a 
               href="https://indianbusinesskit.in" 
               className="text-xs text-slate-500 hover:text-slate-400 font-semibold transition-colors mt-2"
