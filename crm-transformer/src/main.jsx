@@ -15,7 +15,7 @@ if (!CLERK_PUBLISHABLE_KEY) {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} afterSignOutUrl="/">
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} proxyUrl="https://clerk.indianbusinesskit.in" afterSignOutUrl="/">
       <BrowserRouter>
         <CRMProvider>
           <App />
