@@ -4,6 +4,7 @@ export function useCurrentUser() {
   const user = {
     id: "123",
     role: "company_admin",
+    email: "admin@indianbusinesskit.com",
   };
 
   return {
