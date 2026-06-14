@@ -625,7 +625,21 @@ SECURITY.md
 
 ---
 
-# 21. AI Agent Final Checklist
+# 21. AI Context Isolation Rule
+
+AI agents must never reference files, components,
+libraries, routes, features, or audit reports that do not
+exist in the current codebase.
+
+Before creating reports, audits, or summaries, inspect
+the actual project files and generate documentation
+only from the current repository state.
+
+Do not reuse previous project context.
+
+---
+
+# 22. AI Agent Final Checklist
 
 Before marking any task complete, the AI must answer:
 
