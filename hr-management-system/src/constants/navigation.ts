@@ -1,5 +1,5 @@
 import { Home, Users, Calendar, Clock, Settings } from "lucide-react";
-import { ROUTES } from "@/config/routes";
+import { ROUTES } from "@/constants/routes";
 
 export const sidebarItems = [
   {

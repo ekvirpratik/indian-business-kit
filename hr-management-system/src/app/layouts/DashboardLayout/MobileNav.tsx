@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { sidebarItems } from "@/constants/navigation";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/app/providers/AuthProvider";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { ThemeToggle } from "@/components/ui/theme-toggle"; // We'll assume ThemeToggle will be created
 
 export function MobileNav() {
-  const { user } = useAuth();
-  const userRole = user?.app_metadata?.role as string || "employee";
+  const { role } = useCurrentUser();
+  const userRole = role || "employee";
 
   return (
     <Sheet>

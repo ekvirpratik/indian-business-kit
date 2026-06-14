@@ -1,14 +1,14 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { ROUTES } from "@/config/routes";
-import { useAuth } from "@/app/providers/AuthProvider";
+import { ROUTES } from "@/constants/routes";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 interface GuardProps {
   children: ReactNode;
 }
 
 export function AuthGuard({ children }: GuardProps) {
-  const { session, isLoading } = useAuth();
+  const { session, isLoading } = useCurrentUser();
   const location = useLocation();
 
   if (isLoading) {
@@ -23,7 +23,7 @@ export function AuthGuard({ children }: GuardProps) {
 }
 
 export function GuestGuard({ children }: GuardProps) {
-  const { session, isLoading } = useAuth();
+  const { session, isLoading } = useCurrentUser();
 
   if (isLoading) {
     return null;
@@ -41,17 +41,15 @@ interface RoleGuardProps extends GuardProps {
 }
 
 export function RoleGuard({ children, roles }: RoleGuardProps) {
-  const { user, isLoading } = useAuth();
+  const { role, isLoading } = useCurrentUser();
   const location = useLocation();
 
   if (isLoading) {
     return null;
   }
 
-  const userRole = user?.app_metadata?.role as string | undefined;
-
-  if (!userRole || !roles.includes(userRole)) {
-    return <Navigate to={ROUTES.DASHBOARD} state={{ from: location }} replace />;
+  if (!role || !roles.includes(role)) {
+    return <Navigate to={ROUTES.UNAUTHORIZED} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

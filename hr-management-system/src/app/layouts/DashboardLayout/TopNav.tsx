@@ -3,7 +3,7 @@ import { MobileNav } from "./MobileNav";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useLocation, Link } from "react-router-dom";
 import { ChevronRight, Home } from "lucide-react";
-import { ROUTES } from "@/config/routes";
+import { ROUTES } from "@/constants/routes";
 import { Fragment } from "react";
 
 function DynamicBreadcrumbs() {

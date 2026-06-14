@@ -3,13 +3,13 @@ import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { sidebarItems } from "@/constants/navigation";
-import { useAuth } from "@/app/providers/AuthProvider";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Sidebar() {
-  const { user } = useAuth();
-  const userRole = user?.app_metadata?.role as string || "employee";
+  const { role } = useCurrentUser();
+  const userRole = role || "employee";
   
   const [expanded, setExpanded] = useState(() => {
     const saved = localStorage.getItem("sidebarExpanded");
@@ -59,6 +59,7 @@ export function Sidebar() {
               <NavLink
                 key={item.href}
                 to={item.href}
+                aria-label={item.title}
                 className={({ isActive }) =>
                   cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-muted overflow-hidden",

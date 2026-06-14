@@ -8,10 +8,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/app/providers/AuthProvider";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 export function UserNav() {
-  const { user } = useAuth();
+  const { user } = useCurrentUser();
   
   return (
     <DropdownMenu>

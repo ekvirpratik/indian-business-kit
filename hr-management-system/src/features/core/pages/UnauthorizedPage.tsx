@@ -1,12 +1,12 @@
 import { ROUTES } from "@/constants/routes";
 import { Link } from "react-router-dom";
 
-export default function NotFoundPage() {
+export default function UnauthorizedPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center">
-      <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
+      <h1 className="text-4xl font-bold mb-4">403 - Unauthorized</h1>
       <p className="text-muted-foreground mb-8">
-        The page you are looking for doesn't exist or has been moved.
+        You do not have permission to access this page.
       </p>
       <Link
         to={ROUTES.DASHBOARD}

@@ -1,19 +1,30 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
-import { ROUTES } from "@/config/routes";
+import { lazy, Suspense } from "react";
+import { ROUTES } from "@/constants/routes";
 import { AuthGuard, GuestGuard, RoleGuard } from "./guards/RouteGuard";
+import { PageSkeleton } from "@/components/skeletons/PageSkeleton";
 
 // Layouts
 import AuthLayout from "@/app/layouts/AuthLayout";
 import DashboardLayout from "@/app/layouts/DashboardLayout";
 
-// Placeholder Pages
-import SignInPage from "@/features/auth/pages/SignInPage";
-import DashboardPage from "@/features/dashboard/pages/DashboardPage";
-import EmployeesPage from "@/features/employees/pages/EmployeesPage";
-import AttendancePage from "@/features/attendance/pages/AttendancePage";
-import LeavesPage from "@/features/leaves/pages/LeavesPage";
-import SettingsPage from "@/features/settings/pages/SettingsPage";
-import NotFoundPage from "@/features/core/pages/NotFoundPage";
+// Lazy Loaded Pages
+const SignInPage = lazy(() => import("@/features/auth/pages/SignInPage"));
+const SignUpPage = lazy(() => import("@/features/auth/pages/SignUpPage"));
+const DashboardPage = lazy(() => import("@/features/dashboard/pages/DashboardPage"));
+const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPage"));
+const AttendancePage = lazy(() => import("@/features/attendance/pages/AttendancePage"));
+const LeavesPage = lazy(() => import("@/features/leaves/pages/LeavesPage"));
+const SettingsPage = lazy(() => import("@/features/settings/pages/SettingsPage"));
+const NotFoundPage = lazy(() => import("@/features/core/pages/NotFoundPage"));
+const UnauthorizedPage = lazy(() => import("@/features/core/pages/UnauthorizedPage"));
+
+// For invitation page, using SignUpPage as placeholder for now
+const InvitationPage = lazy(() => import("@/features/auth/pages/SignUpPage"));
+
+const SuspenseLayout = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
+);
 
 const router = createBrowserRouter([
   {
@@ -30,7 +41,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: ROUTES.LOGIN,
-        element: <SignInPage />,
+        element: <SuspenseLayout><SignInPage /></SuspenseLayout>,
+      },
+      {
+        path: ROUTES.REGISTER,
+        element: <SuspenseLayout><SignUpPage /></SuspenseLayout>,
+      },
+      {
+        path: ROUTES.INVITATION,
+        element: <SuspenseLayout><InvitationPage /></SuspenseLayout>,
       },
     ],
   },
@@ -44,13 +63,13 @@ const router = createBrowserRouter([
     children: [
       {
         path: ROUTES.DASHBOARD,
-        element: <DashboardPage />,
+        element: <SuspenseLayout><DashboardPage /></SuspenseLayout>,
       },
       {
         path: ROUTES.EMPLOYEES,
         element: (
           <RoleGuard roles={["company_admin", "manager"]}>
-            <EmployeesPage />
+            <SuspenseLayout><EmployeesPage /></SuspenseLayout>
           </RoleGuard>
         ),
       },
@@ -58,7 +77,7 @@ const router = createBrowserRouter([
         path: ROUTES.ATTENDANCE,
         element: (
           <RoleGuard roles={["company_admin", "manager", "employee"]}>
-            <AttendancePage />
+            <SuspenseLayout><AttendancePage /></SuspenseLayout>
           </RoleGuard>
         ),
       },
@@ -66,7 +85,7 @@ const router = createBrowserRouter([
         path: ROUTES.LEAVES,
         element: (
           <RoleGuard roles={["company_admin", "manager", "employee"]}>
-            <LeavesPage />
+            <SuspenseLayout><LeavesPage /></SuspenseLayout>
           </RoleGuard>
         ),
       },
@@ -74,15 +93,19 @@ const router = createBrowserRouter([
         path: ROUTES.SETTINGS,
         element: (
           <RoleGuard roles={["company_admin"]}>
-            <SettingsPage />
+            <SuspenseLayout><SettingsPage /></SuspenseLayout>
           </RoleGuard>
         ),
+      },
+      {
+        path: ROUTES.UNAUTHORIZED,
+        element: <SuspenseLayout><UnauthorizedPage /></SuspenseLayout>,
       },
     ],
   },
   {
     path: "*",
-    element: <NotFoundPage />,
+    element: <SuspenseLayout><NotFoundPage /></SuspenseLayout>,
   },
 ]);
 
