@@ -9,4 +9,7 @@ export const ROUTES = {
   ATTENDANCE: "/attendance",
   LEAVES: "/leaves",
   SETTINGS: "/settings",
-};
+
+  // Dev routes
+  DESIGN_SYSTEM: "/dev/design-system",
+} as const;

@@ -16,6 +16,7 @@ const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPag
 const AttendancePage = lazy(() => import("@/features/attendance/pages/AttendancePage"));
 const LeavesPage = lazy(() => import("@/features/leaves/pages/LeavesPage"));
 const SettingsPage = lazy(() => import("@/features/settings/pages/SettingsPage"));
+const DesignSystemPage = lazy(() => import("@/features/dev/pages/DesignSystemPage"));
 const NotFoundPage = lazy(() => import("@/features/core/pages/NotFoundPage"));
 const UnauthorizedPage = lazy(() => import("@/features/core/pages/UnauthorizedPage"));
 
@@ -25,6 +26,8 @@ const InvitationPage = lazy(() => import("@/features/auth/pages/SignUpPage"));
 const SuspenseLayout = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
 );
+
+import { isDev } from "@/lib/env";
 
 const router = createBrowserRouter([
   {
@@ -103,6 +106,10 @@ const router = createBrowserRouter([
       },
     ],
   },
+  ...(isDev ? [{
+    path: ROUTES.DESIGN_SYSTEM,
+    element: <SuspenseLayout><DesignSystemPage /></SuspenseLayout>,
+  }] : []),
   {
     path: "*",
     element: <SuspenseLayout><NotFoundPage /></SuspenseLayout>,
