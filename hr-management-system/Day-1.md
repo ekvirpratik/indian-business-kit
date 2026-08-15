@@ -740,3 +740,43 @@ Today you are building the **foundation that the next 6 days will stand on**.
 Bro, after Day 1, your project should already look like a **premium SaaS shell** (beautiful sidebar, topbar, dark mode, routing, animations, skeletons), even though no business data exists yet.
 
 Tomorrow (Day 2) we will move into **Supabase Database, Multi-Tenant Architecture, RLS, Clerk integration strategy, and security foundation**. 🚀
+
+
+
+
+
+
+```text
+PHASE 0
+Architecture sanity check
+        ↓
+PHASE 1
+Data model
+        ↓
+PHASE 2
+Database migration
+        ↓
+PHASE 3
+RLS/security
+        ↓
+PHASE 4
+Clerk identity integration
+        ↓
+PHASE 5
+Subscription → PeakHR access
+        ↓
+PHASE 6
+Company onboarding
+        ↓
+PHASE 7
+Employee invitation
+        ↓
+PHASE 8
+Employee CRUD
+        ↓
+PHASE 9
+Attendance
+        ↓
+PHASE 10
+Leaves
+```
