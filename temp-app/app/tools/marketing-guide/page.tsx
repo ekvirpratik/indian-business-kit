@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useCallback, useSyncExternalStore } from "react"
+import React, { useState, useCallback, useMemo, useSyncExternalStore } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { Navbar } from "@/components/shared/navbar"
 import { LightRays } from "@/components/ui/light-rays"
@@ -205,42 +205,89 @@ function WelcomePlaceholder() {
   )
 }
 
-const subscribe = () => () => {}
+function subscribeToStorage(callback: () => void) {
+  window.addEventListener("storage", callback)
+  window.addEventListener("ibk-local-storage", callback)
+  return () => {
+    window.removeEventListener("storage", callback)
+    window.removeEventListener("ibk-local-storage", callback)
+  }
+}
+
+function getProgressSnapshot(): string {
+  try {
+    return localStorage.getItem(PROGRESS_KEY) ?? "{}"
+  } catch {
+    return "{}"
+  }
+}
+
+function getProgressServerSnapshot(): string {
+  return "{}"
+}
+
+function getBusinessSnapshot(): string {
+  try {
+    return localStorage.getItem(BUSINESS_KEY_STORE) ?? ""
+  } catch {
+    return ""
+  }
+}
+
+function getBusinessServerSnapshot(): string {
+  return ""
+}
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function MarketingGuidePage() {
   const isMounted = useSyncExternalStore(
-    subscribe,
+    subscribeToStorage,
     () => true,
     () => false
   )
 
-  const [selectedBusiness, setSelectedBusiness] = useState<BusinessKey | null>(null)
-  const [progress, setProgress]                 = useState<Record<string, boolean>>({})
-  const [sidebarOpen, setSidebarOpen]           = useState(false)
+  const rawProgress = useSyncExternalStore(
+    subscribeToStorage,
+    getProgressSnapshot,
+    getProgressServerSnapshot
+  )
 
-  useEffect(() => {
+  const progress = useMemo(() => {
     try {
-      const saved    = JSON.parse(localStorage.getItem(PROGRESS_KEY) ?? "{}") as Record<string, boolean>
-      const savedBiz = localStorage.getItem(BUSINESS_KEY_STORE) as BusinessKey | null
-      if (saved && Object.keys(saved).length > 0) setProgress(saved)
-      if (savedBiz && businessData[savedBiz]) setSelectedBusiness(savedBiz)
-    } catch { /* ignore */ }
-  }, [])
+      return JSON.parse(rawProgress) as Record<string, boolean>
+    } catch {
+      return {}
+    }
+  }, [rawProgress])
+
+  const rawBusiness = useSyncExternalStore(
+    subscribeToStorage,
+    getBusinessSnapshot,
+    getBusinessServerSnapshot
+  )
+
+  const [selectedBusinessOverride, setSelectedBusinessOverride] = useState<BusinessKey | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const selectedBusiness = selectedBusinessOverride ?? (rawBusiness && rawBusiness in businessData ? (rawBusiness as BusinessKey) : null)
 
   const handleSelect = (key: BusinessKey) => {
-    setSelectedBusiness(key)
+    setSelectedBusinessOverride(key)
     setSidebarOpen(false)
-    try { localStorage.setItem(BUSINESS_KEY_STORE, key) } catch { /* ignore */ }
+    try {
+      localStorage.setItem(BUSINESS_KEY_STORE, key)
+      window.dispatchEvent(new Event("ibk-local-storage"))
+    } catch { /* ignore */ }
   }
 
   const toggleTask = useCallback((taskId: string) => {
-    setProgress(prev => {
-      const next = { ...prev, [taskId]: !prev[taskId] }
+    try {
+      const current = JSON.parse(localStorage.getItem(PROGRESS_KEY) ?? "{}") as Record<string, boolean>
+      const next = { ...current, [taskId]: !current[taskId] }
       if (!next[taskId]) delete next[taskId]
-      try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(next)) } catch { /* ignore */ }
-      return next
-    })
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(next))
+      window.dispatchEvent(new Event("ibk-local-storage"))
+    } catch { /* ignore */ }
   }, [])
 
   const plan = selectedBusiness ? businessData[selectedBusiness] : null
