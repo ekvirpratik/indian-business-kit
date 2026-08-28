@@ -13,7 +13,6 @@ import {
   Users,
   Megaphone,
   BarChart3,
-  MessageSquare,
   Globe,
   Lock,
   ArrowRight,
@@ -22,6 +21,8 @@ import {
   AlertTriangle,
   X,
   RefreshCw,
+  Sparkles,
+  FileText,
 } from "lucide-react"
 
 // ─── Tool data ────────────────────────────────────────────────────────────────
@@ -347,6 +348,99 @@ export default function ToolsPage() {
               <ComingSoonCard key={tool.id} tool={tool} index={i} />
             ))}
           </div>
+        </div>
+
+        {/* ── Free Tools ── */}
+        <div className="max-w-7xl mx-auto mt-20">
+          <div className="flex items-center gap-4 mb-12">
+            <div className="h-px flex-1 bg-black/5" />
+            <span className="text-sm font-mono uppercase tracking-[3px] text-[#666666]">Free Tools</span>
+            <div className="h-px flex-1 bg-black/5" />
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.55 }}
+          >
+            <Link href="/tools/marketing-guide" className="group block">
+              <div className="relative rounded-[24px] border border-[#18E299]/25 bg-white shadow-sm overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:border-[#18E299]/50 group-hover:-translate-y-1">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#18E299] to-transparent opacity-60" />
+                <div className="flex flex-col lg:flex-row lg:items-center gap-6 p-8 md:p-10">
+                  <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-[#18E299]/10 border border-[#18E299]/20">
+                    <Sparkles className="size-8 text-[#0fa76e]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <h3 className="text-xl font-bold text-[#0d0d0d]">Digital Marketing Guide</h3>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#18E299]/10 border border-[#18E299]/20 text-[10px] font-bold uppercase tracking-widest text-[#0fa76e]">
+                        <span className="size-1.5 rounded-full bg-[#18E299] animate-pulse" />
+                        Free · No Login
+                      </span>
+                    </div>
+                    <p className="text-[#666666] text-base leading-relaxed max-w-xl">
+                      Pick your business type and instantly get a personalised learning roadmap, curated YouTube videos, a weekly action plan, KPIs, and recommended tools — all completely free.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {["Manufacturer (B2B)", "Retail Shop", "Service Business", "Startup", "Freelancer"].map(tag => (
+                        <span key={tag} className="px-2.5 py-1 rounded-full bg-black/4 border border-black/5 text-xs font-medium text-[#666]">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="shrink-0 flex items-center gap-2 text-sm font-bold text-[#0fa76e] group-hover:gap-3 transition-all">
+                    Generate My Plan
+                    <ArrowRight className="size-4" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* Invoice Generator card */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.55, delay: 0.1 }}
+            className="mt-5"
+          >
+            <a href="/tools/invoice-generator/index.html" target="_blank" rel="noopener noreferrer" className="group block">
+              <div className="relative rounded-[24px] border border-[#18E299]/25 bg-white shadow-sm overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:border-[#18E299]/50 group-hover:-translate-y-1">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#18E299] to-transparent opacity-60" />
+                <div className="flex flex-col lg:flex-row lg:items-center gap-6 p-8 md:p-10">
+                  <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-[#18E299]/10 border border-[#18E299]/20">
+                    <FileText className="size-8 text-[#0fa76e]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <h3 className="text-xl font-bold text-[#0d0d0d]">Smart Invoice Generator</h3>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#18E299]/10 border border-[#18E299]/20 text-[10px] font-bold uppercase tracking-widest text-[#0fa76e]">
+                        <span className="size-1.5 rounded-full bg-[#18E299] animate-pulse" />
+                        Free · No Login
+                      </span>
+                    </div>
+                    <p className="text-[#666666] text-base leading-relaxed max-w-xl">
+                      Create GST-ready invoices in seconds — CGST/SGST/IGST auto-calculated, PDF download, 5 professional templates, Hindi/English toggle, and customer &amp; product management.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {["PDF Export", "GST Compliant", "5 Templates", "Hindi Support", "Customer DB"].map(tag => (
+                        <span key={tag} className="px-2.5 py-1 rounded-full bg-black/4 border border-black/5 text-xs font-medium text-[#666]">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="shrink-0 flex items-center gap-2 text-sm font-bold text-[#0fa76e] group-hover:gap-3 transition-all">
+                    Create Invoice
+                    <ArrowRight className="size-4" />
+                  </div>
+                </div>
+              </div>
+            </a>
+          </motion.div>
         </div>
 
         {/* CTA Banner */}

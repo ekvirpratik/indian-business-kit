@@ -1,41 +1,49 @@
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
-import { lazy, Suspense } from "react";
-import { ROUTES } from "@/constants/routes";
-import { AuthGuard, GuestGuard, RoleGuard } from "./guards/RouteGuard";
-import { PageSkeleton } from "@/components/skeletons/PageSkeleton";
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
+import { ROUTES } from '@/constants/routes';
+import { AuthGuard, GuestGuard, RoleGuard } from './guards/RouteGuard';
+import { PageSkeleton } from '@/components/skeletons/PageSkeleton';
+import { isDev } from '@/lib/env';
 
 // Layouts
-import AuthLayout from "@/app/layouts/AuthLayout";
-import DashboardLayout from "@/app/layouts/DashboardLayout";
+import AuthLayout from '@/app/layouts/AuthLayout';
+import DashboardLayout from '@/app/layouts/DashboardLayout';
 
 // Lazy Loaded Pages
-const SignInPage = lazy(() => import("@/features/auth/pages/SignInPage"));
-const SignUpPage = lazy(() => import("@/features/auth/pages/SignUpPage"));
-const DashboardPage = lazy(() => import("@/features/dashboard/pages/DashboardPage"));
-const EmployeesPage = lazy(() => import("@/features/employees/pages/EmployeesPage"));
-const AttendancePage = lazy(() => import("@/features/attendance/pages/AttendancePage"));
-const LeavesPage = lazy(() => import("@/features/leaves/pages/LeavesPage"));
-const SettingsPage = lazy(() => import("@/features/settings/pages/SettingsPage"));
-const DesignSystemPage = lazy(() => import("@/features/dev/pages/DesignSystemPage"));
-const NotFoundPage = lazy(() => import("@/features/core/pages/NotFoundPage"));
-const UnauthorizedPage = lazy(() => import("@/features/core/pages/UnauthorizedPage"));
+const SignInPage = lazy(() => import('@/features/auth/pages/SignInPage'));
+const SignUpPage = lazy(() => import('@/features/auth/pages/SignUpPage'));
+const PostAuthPage = lazy(() => import('@/features/auth/pages/PostAuthPage'));
+const InvitationPage = lazy(() => import('@/features/auth/pages/InvitationPage'));
+const CreateCompanyPage = lazy(() => import('@/features/auth/pages/CreateCompanyPage'));
+const SubscriptionRequiredPage = lazy(() => import('@/features/core/pages/SubscriptionRequiredPage'));
+const AccessSuspendedPage = lazy(() => import('@/features/core/pages/AccessSuspendedPage'));
 
-// For invitation page, using SignUpPage as placeholder for now
-const InvitationPage = lazy(() => import("@/features/auth/pages/SignUpPage"));
+const DashboardPage = lazy(() => import('@/features/dashboard/pages/DashboardPage'));
+const EmployeesPage = lazy(() => import('@/features/employees/pages/EmployeesPage'));
+const AttendancePage = lazy(() => import('@/features/attendance/pages/AttendancePage'));
+const LeavesPage = lazy(() => import('@/features/leaves/pages/LeavesPage'));
+const SettingsPage = lazy(() => import('@/features/settings/pages/SettingsPage'));
+const DesignSystemPage = lazy(() => import('@/features/dev/pages/DesignSystemPage'));
+const NotFoundPage = lazy(() => import('@/features/core/pages/NotFoundPage'));
+const UnauthorizedPage = lazy(() => import('@/features/core/pages/UnauthorizedPage'));
 
 const SuspenseLayout = ({ children }: { children: React.ReactNode }) => (
   <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
 );
 
-import { isDev } from "@/lib/env";
-
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Navigate to={ROUTES.DASHBOARD} replace />,
   },
+  // Post-Authentication Gateway
   {
-    path: "/",
+    path: ROUTES.POST_AUTH,
+    element: <SuspenseLayout><PostAuthPage /></SuspenseLayout>,
+  },
+  // Public & Guest Auth Pages
+  {
+    path: '/',
     element: (
       <GuestGuard>
         <AuthLayout />
@@ -50,14 +58,35 @@ const router = createBrowserRouter([
         path: ROUTES.REGISTER,
         element: <SuspenseLayout><SignUpPage /></SuspenseLayout>,
       },
+    ],
+  },
+  // Invitation flow (supports both guests and authenticated users)
+  {
+    path: '/',
+    element: <AuthLayout />,
+    children: [
       {
         path: ROUTES.INVITATION,
         element: <SuspenseLayout><InvitationPage /></SuspenseLayout>,
       },
     ],
   },
+  // Onboarding & Entitlement Resolution Pages
   {
-    path: "/",
+    path: ROUTES.ONBOARDING_CREATE_COMPANY,
+    element: <SuspenseLayout><CreateCompanyPage /></SuspenseLayout>,
+  },
+  {
+    path: ROUTES.SUBSCRIPTION_REQUIRED,
+    element: <SuspenseLayout><SubscriptionRequiredPage /></SuspenseLayout>,
+  },
+  {
+    path: ROUTES.ACCESS_SUSPENDED,
+    element: <SuspenseLayout><AccessSuspendedPage /></SuspenseLayout>,
+  },
+  // Protected Dashboard Application
+  {
+    path: '/',
     element: (
       <AuthGuard>
         <DashboardLayout />
@@ -71,7 +100,7 @@ const router = createBrowserRouter([
       {
         path: ROUTES.EMPLOYEES,
         element: (
-          <RoleGuard roles={["company_admin", "manager"]}>
+          <RoleGuard roles={['super_admin', 'company_admin', 'manager']}>
             <SuspenseLayout><EmployeesPage /></SuspenseLayout>
           </RoleGuard>
         ),
@@ -79,7 +108,7 @@ const router = createBrowserRouter([
       {
         path: ROUTES.ATTENDANCE,
         element: (
-          <RoleGuard roles={["company_admin", "manager", "employee"]}>
+          <RoleGuard roles={['super_admin', 'company_admin', 'manager', 'employee']}>
             <SuspenseLayout><AttendancePage /></SuspenseLayout>
           </RoleGuard>
         ),
@@ -87,7 +116,7 @@ const router = createBrowserRouter([
       {
         path: ROUTES.LEAVES,
         element: (
-          <RoleGuard roles={["company_admin", "manager", "employee"]}>
+          <RoleGuard roles={['super_admin', 'company_admin', 'manager', 'employee']}>
             <SuspenseLayout><LeavesPage /></SuspenseLayout>
           </RoleGuard>
         ),
@@ -95,7 +124,7 @@ const router = createBrowserRouter([
       {
         path: ROUTES.SETTINGS,
         element: (
-          <RoleGuard roles={["company_admin"]}>
+          <RoleGuard roles={['super_admin', 'company_admin']}>
             <SuspenseLayout><SettingsPage /></SuspenseLayout>
           </RoleGuard>
         ),
@@ -106,12 +135,16 @@ const router = createBrowserRouter([
       },
     ],
   },
-  ...(isDev ? [{
-    path: ROUTES.DESIGN_SYSTEM,
-    element: <SuspenseLayout><DesignSystemPage /></SuspenseLayout>,
-  }] : []),
+  ...(isDev
+    ? [
+        {
+          path: ROUTES.DESIGN_SYSTEM,
+          element: <SuspenseLayout><DesignSystemPage /></SuspenseLayout>,
+        },
+      ]
+    : []),
   {
-    path: "*",
+    path: '*',
     element: <SuspenseLayout><NotFoundPage /></SuspenseLayout>,
   },
 ]);

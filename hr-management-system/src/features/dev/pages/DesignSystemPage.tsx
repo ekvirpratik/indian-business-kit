@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TableCell, TableHead, TableRow } from "@/components/ui/table";
 import { Users } from "lucide-react";
 import { toast } from "@/lib/toast";
+import { JwtClaimsInspector } from "@/features/dev/components/JwtClaimsInspector";
 
 export default function DesignSystemPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -39,6 +40,10 @@ export default function DesignSystemPage() {
       />
 
       <div className="grid gap-12">
+        {/* Live Clerk ↔ Supabase JWT Claims Verification */}
+        <section className="space-y-4">
+          <JwtClaimsInspector />
+        </section>
         {/* Typography */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold tracking-tight">Typography</h2>

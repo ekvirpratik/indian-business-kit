@@ -1,35 +1,36 @@
-import { Home, Users, Calendar, Clock, Settings } from "lucide-react";
-import { ROUTES } from "@/constants/routes";
+import { Home, Users, Calendar, Clock, Settings } from 'lucide-react';
+import { ROUTES } from '@/constants/routes';
+import { ROLES, ADMIN_ROLES, MANAGER_ROLES } from '@/constants/roles';
 
 export const sidebarItems = [
   {
-    title: "Dashboard",
+    title: 'Dashboard',
     icon: Home,
     href: ROUTES.DASHBOARD,
-    roles: ["company_admin", "manager"],
+    roles: [ROLES.SUPER_ADMIN, ROLES.COMPANY_ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE],
   },
   {
-    title: "Employees",
+    title: 'Employees',
     icon: Users,
     href: ROUTES.EMPLOYEES,
-    roles: ["company_admin", "manager"],
+    roles: MANAGER_ROLES,
   },
   {
-    title: "Attendance",
+    title: 'Attendance',
     icon: Clock,
     href: ROUTES.ATTENDANCE,
-    roles: ["company_admin", "manager", "employee"],
+    roles: [ROLES.SUPER_ADMIN, ROLES.COMPANY_ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE],
   },
   {
-    title: "Leaves",
+    title: 'Leaves',
     icon: Calendar,
     href: ROUTES.LEAVES,
-    roles: ["company_admin", "manager", "employee"],
+    roles: [ROLES.SUPER_ADMIN, ROLES.COMPANY_ADMIN, ROLES.MANAGER, ROLES.EMPLOYEE],
   },
   {
-    title: "Settings",
+    title: 'Settings',
     icon: Settings,
     href: ROUTES.SETTINGS,
-    roles: ["company_admin"],
+    roles: ADMIN_ROLES,
   },
 ];

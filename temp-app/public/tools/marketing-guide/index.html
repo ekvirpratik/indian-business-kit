@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Marketing Learning & Business Growth Platform</title>
+    <meta name="description" content="Premium Digital Marketing Learning Platform tailored for your business.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons (CDN) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- html2pdf.js for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="ph ph-rocket-launch"></i>
+                    <h1>Growth Academy</h1>
+                </div>
+                <div class="business-selector-card">
+                    <label for="businessType">Select Your Business Type</label>
+                    <select id="businessType">
+                        <option value="">-- Choose Business Type --</option>
+                        <option value="manufacturer">Manufacturer (B2B)</option>
+                        <option value="retail">Retail Shop (Local Customers)</option>
+                        <option value="service">Service Business (Leads)</option>
+                        <option value="startup">Startup (Brand Awareness)</option>
+                        <option value="freelancer">Freelancer (Personal Branding)</option>
+                    </select>
+                </div>
+                <div id="progress-container" class="progress-container hidden">
+                    <div class="progress-header">
+                        <span>Overall Progress</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                    </div>
+                </div>
+                <button id="download-btn" class="btn-primary hidden">
+                    <i class="ph ph-download-simple"></i> Download Plan (PDF)
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div id="welcome-message" class="welcome-message">
+                <h2>Welcome to Growth Academy</h2>
+                <p>Select your business type on the left to generate your personalized learning plan.</p>
+                <div class="hero-image-placeholder">
+                    <i class="ph ph-chart-line-up"></i>
+                </div>
+            </div>
+
+            <!-- Content Container to be converted to PDF -->
+            <div id="plan-content" class="hidden">
+                <!-- Header for PDF -->
+                <div id="pdf-header" class="pdf-only">
+                    <h2>Growth Academy - Marketing Plan</h2>
+                    <h3 id="pdf-business-title"></h3>
+                </div>
+
+                <!-- Learning Roadmap Section -->
+                <section class="plan-section">
+                    <div class="section-header">
+                        <i class="ph ph-map-trifold"></i>
+                        <h2>Learning Roadmap</h2>
+                    </div>
+                    <div id="roadmap-container" class="roadmap-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- YouTube Learning Center -->
+                <section class="plan-section">
+                    <div class="section-header" data-html2canvas-ignore="true">
+                        <i class="ph ph-youtube-logo"></i>
+                        <h2>Learning Center</h2>
+                    </div>
+                    <div id="videos-container" class="videos-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Action Plan Section -->
+                <section class="plan-section">
+                    <div class="section-header">
+                        <i class="ph ph-check-square-offset"></i>
+                        <h2>Weekly Action Plan</h2>
+                    </div>
+                    <div id="tasks-container" class="tasks-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- KPI & Metrics Section -->
+                <section class="plan-section">
+                    <div class="section-header">
+                        <i class="ph ph-trend-up"></i>
+                        <h2>Marketing Success Metrics (KPIs)</h2>
+                    </div>
+                    <div id="kpi-container" class="kpi-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Free Tools Section -->
+                <section class="plan-section">
+                    <div class="section-header">
+                        <i class="ph ph-wrench"></i>
+                        <h2>Recommended Tools</h2>
+                    </div>
+                    <div id="tools-container" class="tools-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>

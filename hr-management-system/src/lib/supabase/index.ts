@@ -1,3 +1,3 @@
-// Supabase Index
-export * from './client'
-export * from './types'
+export * from './client';
+export * from './SupabaseProvider';
+export * from './types';
